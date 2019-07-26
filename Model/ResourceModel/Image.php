@@ -1,0 +1,61 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ImageOptimizer
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+namespace Mageplaza\ImageOptimizer\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+/**
+ * Class Image
+ * @package Mageplaza\ImageOptimizer\Model\ResourceModel
+ */
+class Image extends AbstractDb
+{
+    /**
+     * Constructor
+     */
+    protected function _construct()
+    {
+        $this->_init('mageplaza_image_optimizer', 'image_id');
+    }
+
+    /**
+     * Insert image data
+     *
+     * @param array $data
+     * @return void
+     */
+    public function insertImagesData($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+        try {
+            $connection->insertMultiple($this->getMainTable(), $data);
+            $connection->commit();
+        } catch (\Exception $e) {
+            $this->_logger->critical($e);
+            $connection->rollBack();
+        }
+    }
+}
