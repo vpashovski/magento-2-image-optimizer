@@ -1,0 +1,45 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ImageOptimizer
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+use Mageplaza\ImageOptimizer\Block\Adminhtml\ProgressBar;
+use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
+
+/** @var ProgressBar $block */
+?>
+<div class="mpcss">
+    <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar"
+             style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SUCCESS) ?>">
+            <?=/* @noEscape */ $block->getContent(Status::SUCCESS) ?>
+        </div>
+        <div class="progress-bar progress-bar-warning" role="progressbar"
+             style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::PENDING) ?>">
+            <?=/* @noEscape */ $block->getContent(Status::PENDING) ?>
+        </div>
+        <div class="progress-bar progress-bar-danger" role="progressbar"
+             style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::ERROR) ?>">
+            <?=/* @noEscape */ $block->getContent(Status::ERROR) ?>
+        </div>
+        <div class="progress-bar progress-bar-infor" role="progressbar"
+             style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SKIPPED) ?>">
+            <?=/* @noEscape */ $block->getContent(Status::SKIPPED) ?>
+        </div>
+    </div>
+</div>

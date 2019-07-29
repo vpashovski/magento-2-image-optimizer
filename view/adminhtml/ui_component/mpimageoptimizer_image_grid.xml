@@ -203,7 +203,7 @@
         <column name="origin_size">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Original Size (KB)</item>
+                    <item name="label" xsi:type="string" translate="true">Original Size (Byte)</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>
@@ -211,7 +211,7 @@
         <column name="optimize_size">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Optimize Size (KB)</item>
+                    <item name="label" xsi:type="string" translate="true">Optimize Size (Byte)</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>
@@ -220,7 +220,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">textRange</item>
-                    <item name="label" xsi:type="string" translate="true">Percent (%)</item>
+                    <item name="label" xsi:type="string" translate="true">Optimized Percent (%)</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>
@@ -228,7 +228,7 @@
         <column name="message">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Message</item>
+                    <item name="label" xsi:type="string" translate="true">Error Message</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>

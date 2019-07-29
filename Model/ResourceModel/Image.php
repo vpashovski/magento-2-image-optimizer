@@ -54,7 +54,7 @@ class Image extends AbstractDb
             $connection->insertMultiple($this->getMainTable(), $data);
             $connection->commit();
         } catch (\Exception $e) {
-            $this->_logger->critical($e);
+            $this->_logger->critical($e->getMessage());
             $connection->rollBack();
         }
     }

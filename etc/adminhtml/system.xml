@@ -34,7 +34,7 @@
                     <comment>Select Yes to enable this module</comment>
                 </field>
                 <field id="backup_image" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Backup Image</label>
+                    <label>Image Backup</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Backup in var/backup_image directory</comment>
                 </field>
@@ -44,13 +44,20 @@
                 <field id="image_quality" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Image Quality</label>
                     <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Quality</source_model>
-                    <comment>You can now specify your optimization level for JPG compression.</comment>
+                    <comment>Specify optimization level for compression.</comment>
+                    <comment><![CDATA[
+                <p>Specify optimization level for compression.</p>
+                <p>Lossless is a filter that compresses the data. This doesn’t reduce the quality but it will require the images to be uncompressed before they can be rendered.
+Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.</p>
+                ]]></comment>
                 </field>
                 <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Quality percent</label>
+                    <label>Quality Percent</label>
                     <validate>validate-digits validate-greater-than-zero</validate>
-                    <comment>%. between 1 and 100. Default value is 92.
-                        For having a good image quality, please remain above 90</comment>
+                    <comment><![CDATA[
+                <p>%. between 1 and 100. Default value is 92.</p>
+                <p>For having a good image quality, please remain above 90</p>
+                ]]></comment>
                     <depends>
                         <field id="image_quality">custom</field>
                     </depends>
@@ -74,13 +81,13 @@
             <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Directory</label>
                 <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Include Directories</label>
+                    <label>Included Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                     <comment>If empty, default directory is pub/media/</comment>
                 </field>
                 <field id="exclude_directories" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Exclude Directories</label>
+                    <label>Excluded Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
@@ -88,7 +95,7 @@
             <group id="cron_job" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Cron Job</label>
                 <field id="enabled_scan" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enable Scan Image</label>
+                    <label>Enable Image Scan</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -98,11 +105,11 @@
                     </depends>
                 </field>
                 <field id="enabled_optimize" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enable Optimize</label>
+                    <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Optimize Schedule</label>
+                    <label>Optimization Schedule</label>
                     <depends>
                         <field id="enabled_optimize">1</field>
                     </depends>

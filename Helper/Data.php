@@ -40,6 +40,7 @@ use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpimageoptimizer';
+    const IMAGETYPE_PNG = 3;
 
     /**
      * @var File
@@ -74,8 +75,8 @@ class Data extends AbstractData
         AdapterFactory $imageFactory,
         CollectionFactory $collectionFactory
     ) {
-        $this->driverFile   = $driverFile;
-        $this->adapterFactory = $imageFactory;
+        $this->driverFile        = $driverFile;
+        $this->adapterFactory    = $imageFactory;
         $this->collectionFactory = $collectionFactory;
 
         parent::__construct($context, $objectManager, $storeManager);
@@ -163,8 +164,8 @@ class Data extends AbstractData
      */
     public function scanFiles()
     {
-        $images             = [];
-        $includePatterns    = ['#.jpg#', '#.png#', '#.gif#', '#.tif#', '#.bmp#'];
+        $images          = [];
+        $includePatterns = ['#.jpg#', '#.png#', '#.gif#', '#.tif#', '#.bmp#'];
         /** @var ImageOptimizerCollection $collection */
         $excludeDirectories   = $this->getExcludeDirectories();
         $excludeDirectories[] = 'pub/media/catalog/product/cache/';
@@ -176,6 +177,9 @@ class Data extends AbstractData
             if ($this->driverFile->isExists($directory)) {
                 $files = $this->driverFile->readDirectoryRecursively($directory);
                 foreach ($files as $file) {
+                    if (!$this->driverFile->isFile($file)) {
+                        continue;
+                    }
                     foreach ($excludeDirectories as $excludeDirectory) {
                         if (preg_match('[' . $excludeDirectory . ']', $file)) {
                             continue 2;
@@ -186,9 +190,18 @@ class Data extends AbstractData
                             && !array_key_exists($file, $images)
                             && !$this->collectionFactory->create()->addFieldToFilter('path', $file)->getSize()
                         ) {
+                            $imageType = exif_imagetype($file);
+                            if ($imageType === self::IMAGETYPE_PNG
+                                && $this->skipTransparentImage()
+                                && imagecolortransparent(imagecreatefrompng($file)) >= 0
+                            ) {
+                                continue 2;
+                            }
+
                             $images[$file] = [
-                                'path' => $file,
-                                'status' => Status::PENDING
+                                'path'        => $file,
+                                'status'      => Status::PENDING,
+                                'origin_size' => $this->driverFile->stat($file)['size']
                             ];
                         }
                     }
@@ -198,29 +211,5 @@ class Data extends AbstractData
         $images = array_merge($this->collectionFactory->create()->getData(), array_values($images));
 
         return $images;
-    }
-
-    /**
-     * @param $path
-     *
-     * @return bool
-     */
-    public function checkTransparentImage($path)
-    {
-        $image = $this->adapterFactory->create();
-        $image->open($path);
-        $width         = $image->getOriginalWidth();
-        $height        = $image->getOriginalHeight();
-
-        for ($i = 0; $i < $width; $i++) {
-            for ($j = 0; $j < $height; $j++) {
-                $rgba = $image->getColorAt($i, $j);
-                if ($rgba['alpha'] === 127) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

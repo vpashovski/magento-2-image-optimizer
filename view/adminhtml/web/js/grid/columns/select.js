@@ -34,16 +34,16 @@ define([
 
             switch (row.status){
                 case 'pending':
-                    color = '#fcecb2';
+                    color = '#f0ad4e';
                     break;
                 case 'error':
-                    color = '#f9d4d4';
+                    color = '#d9534f';
                     break;
                 case 'success':
-                    color = '#d0e5a9';
+                    color = '#5cb85c';
                     break;
                 case 'skipped':
-                    color = '#0099e5';
+                    color = '#337ab7';
                     break;
             }
 
