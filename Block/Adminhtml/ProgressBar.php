@@ -116,12 +116,12 @@ class ProgressBar extends Template
      */
     public function getWidthByStatus($status)
     {
-        if ($this->getTotalImage() == 0 || $this->getTotalByStatus($status) == 0) {
+        if ($this->getTotalImage() === 0 || $this->getTotalByStatus($status) === 0) {
             return '0%';
         }
         $width = $this->getTotalByStatus($status)/$this->getTotalImage();
 
-        return round($width * 100, 2) . '%';
+        return round($width * 100, 3) . '%';
     }
 
     /**
@@ -131,6 +131,10 @@ class ProgressBar extends Template
      */
     public function getBarContent($status)
     {
+        if ($this->getTotalByStatus($status) === 0) {
+            return '';
+        }
+
         return $this->getWidthByStatus($status) . ' ' . __($status) . ' (' . $this->getTotalByStatus($status) . '/' . $this->getTotalImage() . ')';
     }
 

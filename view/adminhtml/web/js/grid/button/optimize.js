@@ -29,7 +29,9 @@ define([
 
     $.widget('mageplaza.imageoptimizer', {
         options: {
-            index: 0
+            index: 0,
+            isStop: false,
+            confirmMessage: $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize all images?')
         },
 
         _create: function () {
@@ -40,37 +42,58 @@ define([
             var self = this;
 
             btnOptimize.on('click', function () {
-                confirmation({
-                    title: $.mage.__('Optimize Image'),
-                    content: $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize all images?'),
-                    actions: {
-                        confirm: function () {
-                            var processModal = $('#mpimageoptimizer-modal');
+                self.openConfirmModal();
+            });
+        },
 
-                            processModal.modal({
-                                'type': 'popup',
-                                'title': 'Optimize Image',
-                                'responsive': true,
-                                'buttons': [{
+        openConfirmModal: function () {
+            var self = this;
+
+            confirmation({
+                title: $.mage.__('Optimize Image'),
+                content: this.options.confirmMessage,
+                actions: {
+                    confirm: function () {
+                        var processModal = $('#mpimageoptimizer-modal');
+
+                        processModal.modal({
+                            'type': 'popup',
+                            'title': 'Optimize Image',
+                            'responsive': true,
+                            'modalClass': 'mpimageoptimizer-modal-popup',
+                            'buttons': [
+                                {
                                     text: $.mage.__('Stop'),
                                     class: 'action-stop-optimize',
                                     click: function () {
+                                        self.options.isStop = true;
                                         confirmation({
                                             content: $.mage.__('Are you sure you will stop image optimization?'),
                                             actions: {
-                                                confirm: function(){
+                                                confirm: function () {
                                                     location.reload();
+                                                },
+                                                cancel: function () {
+                                                    self.options.isStop = false;
+                                                    self.loadAjax();
                                                 }
                                             }
                                         });
                                     }
-                                }]
-                            });
-                            processModal.modal('openModal');
-                            self.optimizeImage();
-                        }
+                                },
+                                {
+                                    text: $.mage.__('Close'),
+                                    class: 'action-close-optimize',
+                                    click: function () {
+                                        location.reload();
+                                    }
+                                }
+                            ]
+                        });
+                        processModal.modal('openModal');
+                        self.optimizeImage();
                     }
-                });
+                }
             });
         },
 
@@ -81,34 +104,39 @@ define([
         },
 
         loadAjax: function () {
-            var self =  this,
+            var self       = this,
                 collection = this.options.collection.items,
-                item = collection[this.options.index],
-                percent;
+                contentProcessing = $('.mpimageoptimizer-modal-content-processing'),
+                item, percent;
 
-            if (this.options.index === 0) {
-                percent = 100 / collection.length;
-            } else {
-                percent = 100 * this.options.index / collection.length;
-            }
-
-            this.options.index++;
-            if (this.options.index >= collection.length) {
+            if (this.options.isStop) {
                 return;
             }
 
+            if (this.options.index >= collection.length) {
+                contentProcessing.text($.mage.__('Image optimization completed'));
+                $('button.action-stop-optimize').hide();
+                $('button.action-close-optimize').show();
+
+                return;
+            }
+            contentProcessing.text(
+                $.mage.__('Processing... ') + (this.options.index + 1) + '/' + this.options.collection.items.length
+            );
+            percent = 100 * (this.options.index + 1) / collection.length;
+
+            item = collection[this.options.index];
+            this.options.index++;
+
             return $.ajax({
                 url: this.options.url,
-                data: {
-                    image_id: item.image_id,
-                    path: item.path
-                }
+                data: {image_id: item.image_id}
             }).done(function (data) {
-                self.getContent(percent, item.path, data.status);
-                self.loadAjax();
+                self.getContent(percent, data.path, data.status);
+                self.loadAjax(collection);
             }).fail(function (data) {
-                self.getContent(percent, item.path, data.status);
-                self.loadAjax();
+                self.getContent(percent, data.path, data.status);
+                self.loadAjax(collection);
             });
         },
 

@@ -21,8 +21,54 @@
 
 namespace Mageplaza\ImageOptimizer\Controller\Adminhtml\ManageImages;
 
+use Exception;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Mageplaza\ImageOptimizer\Controller\Adminhtml\Image;
+use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 
-class MassRestore
+/**
+ * Class MassRestore
+ * @package Mageplaza\ImageOptimizer\Controller\Adminhtml\ManageImages
+ */
+class MassRestore extends Image
 {
+    /**
+     * @return $this|ResponseInterface|ResultInterface
+     * @throws LocalizedException
+     */
+    public function execute()
+    {
+        $collection  = $this->filter->getCollection($this->collectionFactory->create());
+        $updated = 0;
+        foreach ($collection as $image) {
+            try {
+                $image->addData([
+                    'status'        => Status::SKIPPED,
+                    'optimize_size' => '',
+                    'percent'       => '',
+                    'message'       => ''
+                ]);
+                $image->save();
+                $updated++;
+            } catch (Exception $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $this->messageManager->addErrorMessage(
+                    __('Something went wrong while updating status for %1.', $banner->getName())
+                );
+            }
+        }
 
+        if ($updated) {
+            $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been updated.', $updated));
+        }
+
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+
+        return $resultRedirect->setPath('*/*/');
+    }
 }

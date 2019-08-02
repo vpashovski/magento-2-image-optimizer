@@ -54,7 +54,12 @@ class Restore extends Image
                 $model = $this->imageFactory->create();
                 $this->resourceModel->load($model, $id);
                 $this->helperData->processImage($model->getData('path'), false);
-                $model->setData('status', Status::SKIPPED);
+                $model->addData([
+                    'status'        => Status::SKIPPED,
+                    'optimize_size' => '',
+                    'percent'       => '',
+                    'message'       => ''
+                ]);
                 $this->resourceModel->save($model);
                 $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
             } catch (Exception $e) {

@@ -44,9 +44,9 @@ class MassRequeue extends Image
     {
         $collection  = $this->filter->getCollection($this->collectionFactory->create());
         $updated = 0;
-        foreach ($collection as $banner) {
+        foreach ($collection as $image) {
             try {
-                $banner->setStatus(Status::PENDING)->save();
+                $image->setStatus(Status::PENDING)->save();
                 $updated++;
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());

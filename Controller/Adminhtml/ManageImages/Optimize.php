@@ -101,7 +101,6 @@ class Optimize extends Image
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $imageId        = $this->getRequest()->getParam('image_id');
-        $path           = $this->getRequest()->getParam('path');
 
         try {
             /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
@@ -117,17 +116,17 @@ class Optimize extends Image
                     return $resultRedirect->setPath('*/*/');
                 }
             }
-            $result = $this->optimizeImage($path);
+            $result = $this->optimizeImage($model->getData('path'));
             $data   = [
                 'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
                 'percent'       => isset($result['error']) ? '' : $result['percent'],
                 'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,
                 'message'       => isset($result['error']) ? $result['error_long'] : ''
             ];
-            $model->addData(array_merge($model->getData(), $data));
+            $model->addData($data);
             $this->resourceModel->save($model);
             if ($this->getRequest()->getParam('isAjax')) {
-                return $this->getResponse()->representJson(Data::jsonEncode($data));
+                return $this->getResponse()->representJson(Data::jsonEncode($model->getData()));
             }
             $this->messageManager->addSuccessMessage(__('Image(s) have been optimized successfully.'));
         } catch (Exception $e) {

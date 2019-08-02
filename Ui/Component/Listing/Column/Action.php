@@ -35,10 +35,10 @@ class Action extends Column
 {
     /** Url path */
     const URL_PATH_OPTIMIZE = 'mpimageoptimizer/manageimages/optimize';
-    const URL_PATH_RESTORE = 'mpimageoptimizer/manageimages/restore';
-    const URL_PATH_REQUEUE = 'mpimageoptimizer/manageimages/requeue';
-    const URL_PATH_SKIP = 'mpimageoptimizer/manageimages/skip';
-    const URL_PATH_DELETE = 'mpimageoptimizer/manageimages/delete';
+    const URL_PATH_RESTORE  = 'mpimageoptimizer/manageimages/restore';
+    const URL_PATH_REQUEUE  = 'mpimageoptimizer/manageimages/requeue';
+    const URL_PATH_SKIP     = 'mpimageoptimizer/manageimages/skip';
+    const URL_PATH_DELETE   = 'mpimageoptimizer/manageimages/delete';
 
     /**
      * @var UrlInterface
@@ -69,7 +69,7 @@ class Action extends Column
         array $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
-        $this->escaper = $escaper;
+        $this->escaper    = $escaper;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -83,35 +83,44 @@ class Action extends Column
                 $name = $this->getData('name');
                 if (isset($item['image_id'])) {
                     $item[$name]['optimize'] = [
-                        'href' => $this->urlBuilder->getUrl(
+                        'href'  => $this->urlBuilder->getUrl(
                             self::URL_PATH_OPTIMIZE,
-                            [
-                                'image_id' => $item['image_id'],
-                                'path' => $item['path']
-                            ]
+                            ['image_id' => $item['image_id']]
                         ),
                         'label' => __('Optimize')
                     ];
-                    $item[$name]['restore'] = [
-                        'href' => $this->urlBuilder->getUrl(self::URL_PATH_RESTORE, ['image_id' => $item['image_id']]),
+                    $item[$name]['restore']  = [
+                        'href'  => $this->urlBuilder->getUrl(
+                            self::URL_PATH_RESTORE,
+                            ['image_id' => $item['image_id']]
+                        ),
                         'label' => __('Restore')
                     ];
-                    $item[$name]['requeue'] = [
-                        'href' => $this->urlBuilder->getUrl(self::URL_PATH_REQUEUE, ['image_id' => $item['image_id']]),
+                    $item[$name]['requeue']  = [
+                        'href'  => $this->urlBuilder->getUrl(
+                            self::URL_PATH_REQUEUE,
+                            ['image_id' => $item['image_id']]
+                        ),
                         'label' => __('Requeue')
                     ];
-                    $item[$name]['delete'] = [
-                        'href' => $this->urlBuilder->getUrl(self::URL_PATH_DELETE, ['image_id' => $item['image_id']]),
-                        'label' => __('Delete'),
+                    $item[$name]['delete']   = [
+                        'href'    => $this->urlBuilder->getUrl(
+                            self::URL_PATH_DELETE,
+                            ['image_id' => $item['image_id']]
+                        ),
+                        'label'   => __('Delete'),
                         'confirm' => [
-                            'title' => __('Delete'),
-                            'message' => __('Are you sure you want to delete a record?'),
+                            'title'         => __('Delete'),
+                            'message'       => __('Are you sure you want to delete a record?'),
                             '__disableTmpl' => true,
                         ],
-                        'post' => true,
+                        'post'    => true,
                     ];
-                    $item[$name]['skip'] = [
-                        'href' => $this->urlBuilder->getUrl(self::URL_PATH_SKIP, ['image_id' => $item['image_id']]),
+                    $item[$name]['skip']     = [
+                        'href'  => $this->urlBuilder->getUrl(
+                            self::URL_PATH_SKIP,
+                            ['image_id' => $item['image_id']]
+                        ),
                         'label' => __('Skip')
                     ];
                 }
