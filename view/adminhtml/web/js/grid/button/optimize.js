@@ -107,7 +107,8 @@ define([
             var self       = this,
                 collection = this.options.collection.items,
                 contentProcessing = $('.mpimageoptimizer-modal-content-processing'),
-                item, percent;
+                item = collection[this.options.index],
+                percent = 100 * (this.options.index + 1) / collection.length;
 
             if (this.options.isStop) {
                 return;
@@ -121,11 +122,10 @@ define([
                 return;
             }
             contentProcessing.text(
-                $.mage.__('Processing... ') + (this.options.index + 1) + '/' + this.options.collection.items.length
+                $.mage.__('Processing... ')
+                + ' (' + (this.options.index + 1)
+                + '/' + this.options.collection.items.length + ')'
             );
-            percent = 100 * (this.options.index + 1) / collection.length;
-
-            item = collection[this.options.index];
             this.options.index++;
 
             return $.ajax({

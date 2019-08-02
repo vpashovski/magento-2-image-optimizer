@@ -31,7 +31,7 @@ define([
         optimizeImage: function (action, data) {
             var selectedImages = this.getSelectedImages(action, data).selected,
                 collection     = {items: []},
-                total = selectedImages.length,
+                total          = selectedImages.length,
                 confirmMessage = $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize the selected image(s)?')
                     + ' (' + total + ' record' + (total > 1 ? 's' : '') + ')';
 
@@ -39,7 +39,11 @@ define([
                 collection.items[index] = {image_id: value};
             });
 
-            imageOptimizer({url: action.url, collection: collection, confirmMessage: confirmMessage}).openConfirmModal();
+            imageOptimizer({
+                url: action.url,
+                collection: collection,
+                confirmMessage: confirmMessage
+            }).openConfirmModal();
         },
 
         getSelectedImages: function (action, data) {

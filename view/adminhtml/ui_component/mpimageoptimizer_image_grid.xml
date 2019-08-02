@@ -71,10 +71,6 @@
                         <item name="type" xsi:type="string">optimize</item>
                         <item name="label" xsi:type="string" translate="true">Optimize</item>
                         <item name="url" xsi:type="url" path="*/*/optimize"/>
-                        <item name="confirm" xsi:type="array">
-                            <item name="title" xsi:type="string" translate="true">Optimize Image</item>
-                            <item name="message" xsi:type="string" translate="true">Too many images will take a long time to optimize. Are you sure you want to optimize the selected image(s)?</item>
-                        </item>
                         <item name="callback" xsi:type="array">
                             <item name="provider" xsi:type="string">mpimageoptimizer_image_grid.mpimageoptimizer_image_grid.listing_top.listing_massaction</item>
                             <item name="target" xsi:type="string">optimizeImage</item>
