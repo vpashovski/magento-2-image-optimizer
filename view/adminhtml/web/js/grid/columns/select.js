@@ -29,25 +29,30 @@ define([
             bodyTmpl: 'Mageplaza_ImageOptimizer/grid/cells/text'
         },
 
-        getStatusColor: function (row) {
-            var color;
+        /**
+         *
+         * @param record
+         * @returns {string}
+         */
+        getLabel: function (record) {
+            var result;
 
-            switch (row.status){
+            switch (record[this.index]){
                 case 'pending':
-                    color = '#f0ad4e';
+                    result = '<span class="mp-grid-severity-pending"><span>PENDING</span></span>';
                     break;
                 case 'error':
-                    color = '#d9534f';
+                    result = '<span class="mp-grid-severity-error"><span>ERROR</span></span>';
                     break;
                 case 'success':
-                    color = '#5cb85c';
+                    result = '<span class="mp-grid-severity-success"><span>SUCCESS</span></span>';
                     break;
                 case 'skipped':
-                    color = '#337ab7';
+                    result = '<span class="mp-grid-severity-skip"><span>SKIPPED</span></span>';
                     break;
             }
 
-            return color;
-        }
+            return result;
+        },
     });
 });

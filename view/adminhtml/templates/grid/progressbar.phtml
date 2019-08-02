@@ -20,26 +20,47 @@
  */
 use Mageplaza\ImageOptimizer\Block\Adminhtml\ProgressBar;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
+use Mageplaza\ImageOptimizer\Helper\Data;
 
 /** @var ProgressBar $block */
+$collection = $block->getImagePendingCollection();
 ?>
 <div class="mpcss">
     <div class="progress">
         <div class="progress-bar progress-bar-success" role="progressbar"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SUCCESS) ?>">
-            <?=/* @noEscape */ $block->getContent(Status::SUCCESS) ?>
+            <?=/* @noEscape */ $block->getBarContent(Status::SUCCESS) ?>
         </div>
         <div class="progress-bar progress-bar-warning" role="progressbar"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::PENDING) ?>">
-            <?=/* @noEscape */ $block->getContent(Status::PENDING) ?>
+            <?=/* @noEscape */ $block->getBarContent(Status::PENDING) ?>
         </div>
         <div class="progress-bar progress-bar-danger" role="progressbar"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::ERROR) ?>">
-            <?=/* @noEscape */ $block->getContent(Status::ERROR) ?>
+            <?=/* @noEscape */ $block->getBarContent(Status::ERROR) ?>
         </div>
         <div class="progress-bar progress-bar-infor" role="progressbar"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SKIPPED) ?>">
-            <?=/* @noEscape */ $block->getContent(Status::SKIPPED) ?>
+            <?=/* @noEscape */ $block->getBarContent(Status::SKIPPED) ?>
         </div>
     </div>
 </div>
+<div class="mpcss" id="mpimageoptimizer-modal" style="display: none;">
+    <div class="progress">
+        <div class="progress-bar progress-bar-success" id="progress-bar-optimize" role="progressbar">
+            <span id="mpimageoptimizer-modal-percent"></span>
+        </div>
+    </div>
+    <div id="mpimageoptimizer-modal-content"></div>
+</div>
+<div id="mpimageoptimizer-button-js"></div>
+<script type="text/x-magento-init">
+    {
+        "#mpimageoptimizer-button-js": {
+            "Mageplaza_ImageOptimizer/js/grid/button/optimize":{
+                "url": "<?= /* @noEscape */ $block->getOptimizeUrl() ?>",
+                "collection": <?= /* @noEscape */ Data::jsonEncode($collection) ?>
+            }
+        }
+    }
+</script>

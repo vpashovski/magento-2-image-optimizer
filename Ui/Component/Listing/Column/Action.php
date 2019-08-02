@@ -83,7 +83,13 @@ class Action extends Column
                 $name = $this->getData('name');
                 if (isset($item['image_id'])) {
                     $item[$name]['optimize'] = [
-                        'href' => $this->urlBuilder->getUrl(self::URL_PATH_OPTIMIZE, ['image_id' => $item['image_id']]),
+                        'href' => $this->urlBuilder->getUrl(
+                            self::URL_PATH_OPTIMIZE,
+                            [
+                                'image_id' => $item['image_id'],
+                                'path' => $item['path']
+                            ]
+                        ),
                         'label' => __('Optimize')
                     ];
                     $item[$name]['restore'] = [

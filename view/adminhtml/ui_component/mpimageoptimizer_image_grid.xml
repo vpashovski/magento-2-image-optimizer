@@ -27,20 +27,6 @@
             <item name="deps" xsi:type="string">mpimageoptimizer_image_grid.mpimageoptimizer_grid_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">mpimageoptimizer_image_grid_columns</item>
-        <item name="buttons" xsi:type="array">
-            <item name="optimize" xsi:type="array">
-                <item name="name" xsi:type="string">optimize</item>
-                <item name="label" xsi:type="string" translate="true">Optimize Image</item>
-                <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">*/*/optimize</item>
-            </item>
-            <item name="scan" xsi:type="array">
-                <item name="name" xsi:type="string">scan</item>
-                <item name="label" xsi:type="string" translate="true">Scan Image</item>
-                <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">*/*/scan</item>
-            </item>
-        </item>
     </argument>
     <dataSource name="mpimageoptimizer_grid_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">

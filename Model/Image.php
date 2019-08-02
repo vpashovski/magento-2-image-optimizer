@@ -21,13 +21,8 @@
 
 namespace Mageplaza\ImageOptimizer\Model;
 
-use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Registry;
-use Mageplaza\ImageOptimizer\Helper\Data;
 
 /**
  * Class Image
@@ -46,31 +41,6 @@ class Image extends AbstractModel implements IdentityInterface
      * @var string
      */
     protected $_eventPrefix = 'mageplaza_image_optimizer';
-
-    protected $helperData;
-
-    /**
-     * Image constructor.
-     *
-     * @param Context $context
-     * @param Registry $registry
-     * @param Data $helperData
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null $resourceCollection
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        Registry $registry,
-        Data $helperData,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = []
-    ) {
-        $this->helperData = $helperData;
-
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
-    }
 
     /**
      * Constructor

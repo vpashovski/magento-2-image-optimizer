@@ -21,6 +21,7 @@
 
 namespace Mageplaza\ImageOptimizer\Model\ResourceModel;
 
+use Exception;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
@@ -53,8 +54,7 @@ class Image extends AbstractDb
         try {
             $connection->insertMultiple($this->getMainTable(), $data);
             $connection->commit();
-        } catch (\Exception $e) {
-            $this->_logger->critical($e->getMessage());
+        } catch (Exception $e) {
             $connection->rollBack();
         }
     }

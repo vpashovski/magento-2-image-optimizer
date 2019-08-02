@@ -24,7 +24,8 @@ namespace Mageplaza\ImageOptimizer\Helper;
 use Exception;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
-use Magento\Framework\Filesystem\Driver\File;
+use Magento\Framework\Filesystem\Driver\File as DriverFile;
+use Magento\Framework\Filesystem\Io\File as IoFile;
 use Magento\Framework\Image\AdapterFactory;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -40,12 +41,17 @@ use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpimageoptimizer';
-    const IMAGETYPE_PNG = 3;
+    const IMAGETYPE_PNG      = 3;
 
     /**
-     * @var File
+     * @var DriverFile
      */
     protected $driverFile;
+
+    /**
+     * @var IoFile
+     */
+    protected $ioFile;
 
     /**
      * @var AdapterFactory
@@ -63,7 +69,8 @@ class Data extends AbstractData
      * @param Context $context
      * @param ObjectManagerInterface $objectManager
      * @param StoreManagerInterface $storeManager
-     * @param File $driverFile
+     * @param DriverFile $driverFile
+     * @param IoFile $ioFile
      * @param AdapterFactory $imageFactory
      * @param CollectionFactory $collectionFactory
      */
@@ -71,11 +78,13 @@ class Data extends AbstractData
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
-        File $driverFile,
+        DriverFile $driverFile,
+        IoFile $ioFile,
         AdapterFactory $imageFactory,
         CollectionFactory $collectionFactory
     ) {
         $this->driverFile        = $driverFile;
+        $this->ioFile            = $ioFile;
         $this->adapterFactory    = $imageFactory;
         $this->collectionFactory = $collectionFactory;
 
@@ -195,12 +204,13 @@ class Data extends AbstractData
                                 && $this->skipTransparentImage()
                                 && imagecolortransparent(imagecreatefrompng($file)) >= 0
                             ) {
-                                continue 2;
+                                $status = Status::SKIPPED;
+                            } else {
+                                $status = Status::PENDING;
                             }
-
                             $images[$file] = [
                                 'path'        => $file,
-                                'status'      => Status::PENDING,
+                                'status'      => $status,
                                 'origin_size' => $this->driverFile->stat($file)['size']
                             ];
                         }
@@ -208,8 +218,50 @@ class Data extends AbstractData
                 }
             }
         }
-        $images = array_merge($this->collectionFactory->create()->getData(), array_values($images));
+        $images = array_values($images);
 
         return $images;
+    }
+
+    /**
+     * @param $url
+     * @param $path
+     *
+     * @throws Exception
+     */
+    public function saveImage($url, $path)
+    {
+        if ($this->getConfigGeneral('backup_image')) {
+            $this->processImage($path, true);
+        }
+        $this->ioFile->read($url, $path);
+    }
+
+    /**
+     * @param $path
+     *
+     * @return mixed
+     */
+    public function getPathInfo($path)
+    {
+        return $this->ioFile->getPathInfo($path);
+    }
+
+    /**
+     * @param $path
+     * @param bool $backup
+     *
+     * @throws Exception
+     */
+    public function processImage($path, $backup = true)
+    {
+        if ($backup) {
+            $pathInfo = $this->getPathInfo($path);
+            $folder   = 'var/backup_image/' . $pathInfo['dirname'];
+            $this->ioFile->checkAndCreateFolder($folder);
+            $this->ioFile->write('var/backup_image/' . $path, $path);
+        } else {
+            $this->ioFile->write($path, 'var/backup_image/' . $path);
+        }
     }
 }

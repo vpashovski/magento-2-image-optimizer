@@ -21,9 +21,23 @@
 
 namespace Mageplaza\ImageOptimizer\Controller\Adminhtml\ManageImages;
 
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
 use Mageplaza\ImageOptimizer\Controller\Adminhtml\Image;
 
+/**
+ * Class MassOptimize
+ * @package Mageplaza\ImageOptimizer\Controller\Adminhtml\ManageImages
+ */
 class MassOptimize extends Image
 {
-
+    /**
+     * @return ResponseInterface|Redirect|ResultInterface
+     */
+    public function execute()
+    {
+        $resultRedirect = $this->resultRedirectFactory->create();
+        return $resultRedirect->setPath('*/*/');
+    }
 }

@@ -32,8 +32,9 @@
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Mageplaza\ImageOptimizer\Block\Adminhtml\ProgressBar" name="mpimageoptimizer-progress-bar" template="Mageplaza_ImageOptimizer::grid/progressbar.phtml"/>
+            <block class="Mageplaza\ImageOptimizer\Block\Adminhtml\ProgressBar" name="mpimageoptimizer_progress-bar" template="Mageplaza_ImageOptimizer::grid/progressbar.phtml"/>
             <uiComponent name="mpimageoptimizer_image_grid"/>
+            <block class="Mageplaza\ImageOptimizer\Block\Adminhtml\Image" name="mpimageoptimizer_buttons"/>
         </referenceContainer>
     </body>
 </page>

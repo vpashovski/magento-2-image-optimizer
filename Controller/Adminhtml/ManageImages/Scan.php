@@ -27,7 +27,6 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Mageplaza\ImageOptimizer\Controller\Adminhtml\Image;
-use Mageplaza\ImageOptimizer\Model\ImageFactory;
 
 /**
  * Class Scan
@@ -42,14 +41,14 @@ class Scan extends Image
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        $data   = $this->helperData->scanFiles();
+        $data           = $this->helperData->scanFiles();
         if (empty($data)) {
             return $resultRedirect->setPath('*/*/');
         }
 
         try {
             $this->resourceModel->insertImagesData($data);
-            $this->messageManager->addSuccessMessage(__('Successfully scan data.'));
+            $this->messageManager->addSuccessMessage(__('Successful data scanning'));
         } catch (Exception  $e) {
             $this->messageManager->addErrorMessage(
                 __('Something went wrong while scan image. Please review the error log.')
