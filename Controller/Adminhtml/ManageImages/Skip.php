@@ -41,8 +41,13 @@ class Skip extends Image
     {
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
-        $id             = $this->getRequest()->getParam('image_id');
+        if (!$this->helperData->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
 
+            return $resultRedirect->setPath('*/*/');
+        }
+
+        $id = $this->getRequest()->getParam('image_id');
         if ($id) {
             try {
                 /** @var \Mageplaza\ImageOptimizer\Model\Image $model */

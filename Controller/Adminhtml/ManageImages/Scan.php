@@ -41,7 +41,13 @@ class Scan extends Image
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        $data           = $this->helperData->scanFiles();
+        if (!$this->helperData->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
+
+            return $resultRedirect->setPath('*/*/');
+        }
+
+        $data = $this->helperData->scanFiles();
         if (empty($data)) {
             return $resultRedirect->setPath('*/*/');
         }

@@ -51,6 +51,7 @@ $collection = $block->getImagePendingCollection();
             <span id="mpimageoptimizer-modal-percent"></span>
         </div>
     </div>
+    <div class="mpimageoptimizer-modal-content-processing"></div>
     <div id="mpimageoptimizer-modal-content"></div>
 </div>
 <div id="mpimageoptimizer-button-js"></div>
@@ -58,6 +59,7 @@ $collection = $block->getImagePendingCollection();
     {
         "#mpimageoptimizer-button-js": {
             "Mageplaza_ImageOptimizer/js/grid/button/optimize":{
+                "isEnabled": "<?= /* @noEscape */ $block->isEnabled() ?>",
                 "url": "<?= /* @noEscape */ $block->getOptimizeUrl() ?>",
                 "collection": <?= /* @noEscape */ Data::jsonEncode($collection) ?>
             }

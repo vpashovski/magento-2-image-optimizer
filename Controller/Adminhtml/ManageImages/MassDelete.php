@@ -40,14 +40,19 @@ class MassDelete extends Image
      */
     public function execute()
     {
-        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        if (!$this->helperData->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
 
-        $delete = $collection->getSize();
+            return $resultRedirect->setPath('*/*/');
+        }
+
+        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        $delete     = $collection->getSize();
         $collection->walk('delete');
 
         $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $delete));
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
         return $resultRedirect->setPath('*/*/');
     }

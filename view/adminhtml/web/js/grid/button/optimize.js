@@ -21,9 +21,9 @@
 define([
     'jquery',
     'Magento_Ui/js/modal/confirm',
-    'mage/storage',
-    'Magento_Ui/js/modal/modal'
-], function ($, confirmation) {
+    'Magento_Ui/js/modal/alert',
+    'Magento_Ui/js/modal/modal',
+], function ($, confirmation, alert) {
     "use strict";
     var btnOptimize = $('#optimize_image');
 
@@ -42,11 +42,32 @@ define([
             var self = this;
 
             btnOptimize.on('click', function () {
+                if (self.options.isEnabled === '0') {
+                    alert({
+                        title: $.mage.__('Optimize Image'),
+                        content: $.mage.__('The module has been disabled.'),
+                    });
+
+                    return;
+                }
                 self.openConfirmModal();
             });
         },
 
         openConfirmModal: function () {
+            var collection = this.options.collection.items;
+
+            if (collection.length > 0) {
+                this.getConfirmModal();
+            } else {
+                alert({
+                    title: $.mage.__('Optimize Image'),
+                    content: $.mage.__('You need to scan all images before starting optimization process.'),
+                });
+            }
+        },
+
+        getConfirmModal: function () {
             var self = this;
 
             confirmation({

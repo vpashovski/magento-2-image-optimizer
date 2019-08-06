@@ -73,6 +73,14 @@ class ProgressBar extends Template
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->helperData->isEnabled();
+    }
+
+    /**
      * @return Collection
      */
     public function getImageCollection()

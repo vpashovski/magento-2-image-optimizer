@@ -41,6 +41,12 @@ class Restore extends Image
     {
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
+        if (!$this->helperData->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
+
+            return $resultRedirect->setPath('*/*/');
+        }
+
         if (!$this->helperData->getConfigGeneral('backup_image')) {
             $this->messageManager->addErrorMessage(__('Backup functionality is currently disabled. Please enable for backups'));
 

@@ -182,6 +182,9 @@ class Data extends AbstractData
         if (empty($includeDirectories)) {
             $includeDirectories = ['pub/media/'];
         }
+        $collection = $this->collectionFactory->create();
+        $pathValues = $collection->getColumnValues('path');
+
         foreach ($includeDirectories as $directory) {
             if ($this->driverFile->isExists($directory)) {
                 $files = $this->driverFile->readDirectoryRecursively($directory);
@@ -197,7 +200,7 @@ class Data extends AbstractData
                     foreach ($includePatterns as $pattern) {
                         if (preg_match($pattern, $file)
                             && !array_key_exists($file, $images)
-                            && !$this->collectionFactory->create()->addFieldToFilter('path', $file)->getSize()
+                            && !in_array($file, $pathValues, true)
                         ) {
                             $imageType = exif_imagetype($file);
                             if ($imageType === self::IMAGETYPE_PNG

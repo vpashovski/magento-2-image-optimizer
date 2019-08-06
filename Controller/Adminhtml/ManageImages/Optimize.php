@@ -100,8 +100,13 @@ class Optimize extends Image
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        $imageId        = $this->getRequest()->getParam('image_id');
+        if (!$this->helperData->isEnabled() && !$this->getRequest()->getParam('isAjax')) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
 
+            return $resultRedirect->setPath('*/*/');
+        }
+
+        $imageId        = $this->getRequest()->getParam('image_id');
         try {
             /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
             $model = $this->imageFactory->create();
@@ -112,6 +117,24 @@ class Optimize extends Image
                         return $this->getResponse()->representJson(Data::jsonEncode(['status' => Status::ERROR]));
                     }
                     $this->messageManager->addErrorMessage(__('The wrong image is specified.'));
+
+                    return $resultRedirect->setPath('*/*/');
+                }
+
+                if ($model->getData('status') === Status::SUCCESS) {
+                    if ($this->getRequest()->getParam('isAjax')) {
+                        return $this->getResponse()->representJson(Data::jsonEncode(['status' => 'optimized']));
+                    }
+                    $this->messageManager->addErrorMessage(__('The image has been optimized previously.'));
+
+                    return $resultRedirect->setPath('*/*/');
+                }
+
+                if ($model->getData('status') === Status::SKIPPED) {
+                    if ($this->getRequest()->getParam('isAjax')) {
+                        return $this->getResponse()->representJson(Data::jsonEncode(['status' => Status::SKIPPED]));
+                    }
+                    $this->messageManager->addErrorMessage(__('The image were skipped.'));
 
                     return $resultRedirect->setPath('*/*/');
                 }

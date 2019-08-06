@@ -42,8 +42,16 @@ class MassRestore extends Image
      */
     public function execute()
     {
-        $collection  = $this->filter->getCollection($this->collectionFactory->create());
-        $updated = 0;
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+        if (!$this->helperData->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
+
+            return $resultRedirect->setPath('*/*/');
+        }
+
+        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        $updated    = 0;
         foreach ($collection as $image) {
             try {
                 $image->addData([
@@ -65,9 +73,6 @@ class MassRestore extends Image
         if ($updated) {
             $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been updated.', $updated));
         }
-
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
         return $resultRedirect->setPath('*/*/');
     }
