@@ -31,10 +31,11 @@
                 <image_quality>custom</image_quality>
                 <quality_percent>92</quality_percent>
                 <skip_transparent_img>1</skip_transparent_img>
-                <force_permission>1</force_permission>
+                <force_permission>0</force_permission>
+                <select_permission>777</select_permission>
             </optimize_options>
             <cron_job>
-                <enabled_scan>1</enabled_scan>
+                <enabled_scan>0</enabled_scan>
                 <scan_schedule>0 * * * *</scan_schedule>
                 <enabled_optimize>0</enabled_optimize>
                 <optimize_schedule>* * * * *</optimize_schedule>

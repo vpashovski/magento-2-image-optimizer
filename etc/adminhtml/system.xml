@@ -69,10 +69,12 @@ Custom (Lossy) is a filter that eliminates some of the data. This will degrade t
                 <field id="force_permission" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Force File Permission</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, you can assign access rights to the optimized image paths. For example: read a file, write a file.</comment>
                 </field>
-                <field id="select_permission" translate="label comment" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="select_permission" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Select Permission</label>
-                    <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Permission</source_model>
+                    <comment>Enter the number representing certain permission. Refer the list here.</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
                     <depends>
                         <field id="force_permission">1</field>
                     </depends>

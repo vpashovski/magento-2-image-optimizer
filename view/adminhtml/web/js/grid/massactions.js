@@ -20,18 +20,18 @@
 
 define([
     'jquery',
-    'Magento_Ui/js/grid/tree-massactions',
+    'Magento_Ui/js/grid/massactions',
     'Magento_Ui/js/modal/confirm',
     'Mageplaza_ImageOptimizer/js/grid/button/optimize',
     'Magento_Ui/js/modal/modal'
-], function ($, TreeMassactions, confirmation, imageOptimizer) {
+], function ($, Massactions, confirmation, imageOptimizer) {
     'use strict';
 
-    return TreeMassactions.extend({
-        optimizeImage: function (action, data) {
-            var selectedImages = this.getSelectedImages(action, data).selected,
+    return Massactions.extend({
+        optimizeImage: function (action) {
+            var selectedImages = this.getSelections().selected,
                 collection     = {items: []},
-                total          = selectedImages.length,
+                total          = this.getSelections().total,
                 confirmMessage = $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize the selected image(s)?')
                     + ' (' + total + ' record' + (total > 1 ? 's' : '') + ')';
 
@@ -45,20 +45,5 @@ define([
                 confirmMessage: confirmMessage
             }).openConfirmModal();
         },
-
-        getSelectedImages: function (action, data) {
-            var itemsType  = data.excludeMode ? 'excluded' : 'selected',
-                selections = {};
-
-            selections[itemsType] = data[itemsType];
-
-            if (!selections[itemsType].length) {
-                selections[itemsType] = false;
-            }
-
-            _.extend(selections, data.params || {});
-
-            return selections;
-        }
     });
 });

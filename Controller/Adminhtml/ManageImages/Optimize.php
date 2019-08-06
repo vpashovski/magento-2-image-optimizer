@@ -106,7 +106,7 @@ class Optimize extends Image
             return $resultRedirect->setPath('*/*/');
         }
 
-        $imageId        = $this->getRequest()->getParam('image_id');
+        $imageId = $this->getRequest()->getParam('image_id');
         try {
             /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
             $model = $this->imageFactory->create();
@@ -123,18 +123,21 @@ class Optimize extends Image
 
                 if ($model->getData('status') === Status::SUCCESS) {
                     if ($this->getRequest()->getParam('isAjax')) {
-                        return $this->getResponse()->representJson(Data::jsonEncode(['status' => 'optimized']));
+                        return $this->getResponse()->representJson(Data::jsonEncode([
+                            'status' => 'optimized',
+                            'path'   => $model->getData('path')
+                        ]));
                     }
-                    $this->messageManager->addErrorMessage(__('The image has been optimized previously.'));
+                    $this->messageManager->addErrorMessage(__('The image(s) had already been optimized previously'));
 
                     return $resultRedirect->setPath('*/*/');
                 }
 
                 if ($model->getData('status') === Status::SKIPPED) {
                     if ($this->getRequest()->getParam('isAjax')) {
-                        return $this->getResponse()->representJson(Data::jsonEncode(['status' => Status::SKIPPED]));
+                        return $this->getResponse()->representJson(Data::jsonEncode($model->getData()));
                     }
-                    $this->messageManager->addErrorMessage(__('The image were skipped.'));
+                    $this->messageManager->addErrorMessage(__('The image(s) are skipped.'));
 
                     return $resultRedirect->setPath('*/*/');
                 }
@@ -169,11 +172,20 @@ class Optimize extends Image
     public function optimizeImage($path)
     {
         $result = [];
-        $params = $this->getParams($path);
-        $url    = 'http://api.resmush.it/?qlty=' . $this->getQuality();
+        if (!$this->helperData->fileExists($path)) {
+            $result = [
+                'error' => true,
+                'error_long' => __('file does not exist')
+            ];
+
+            return $result;
+        }
+
         $curl   = $this->curlFactory->create();
-        $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);
+        $url    = 'http://api.resmush.it/?qlty=' . $this->getQuality();
         try {
+            $params = $this->getParams($path);
+            $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);
             $resultCurl = $curl->read();
             if (!empty($resultCurl)) {
                 $responseBody = Zend_Http_Response::extractBody($resultCurl);
@@ -185,7 +197,9 @@ class Optimize extends Image
         }
         $curl->close();
 
-        $this->helperData->saveImage($result['dest'], $path);
+        if (isset($result['dest'])) {
+            $this->helperData->saveImage($result['dest'], $path);
+        }
 
         return $result;
     }

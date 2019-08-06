@@ -65,7 +65,7 @@
                     <item name="component" xsi:type="string">Mageplaza_ImageOptimizer/js/grid/massactions</item>
                 </item>
             </argument>
-            <action name="optimize">
+            <action name="optimize" class="Mageplaza\ImageOptimizer\Ui\Component\Action">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">optimize</item>
@@ -197,7 +197,7 @@
         <column name="optimize_size">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Optimize Size (Byte)</item>
+                    <item name="label" xsi:type="string" translate="true">Optimized Size (Byte)</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>
@@ -206,7 +206,7 @@
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">textRange</item>
-                    <item name="label" xsi:type="string" translate="true">Optimized Percent (%)</item>
+                    <item name="label" xsi:type="string" translate="true">Optimization Percent (%)</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>

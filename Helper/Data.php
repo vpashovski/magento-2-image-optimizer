@@ -26,7 +26,6 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Filesystem\Io\File as IoFile;
-use Magento\Framework\Image\AdapterFactory;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
@@ -54,11 +53,6 @@ class Data extends AbstractData
     protected $ioFile;
 
     /**
-     * @var AdapterFactory
-     */
-    protected $adapterFactory;
-
-    /**
      * @var CollectionFactory
      */
     protected $collectionFactory;
@@ -71,7 +65,6 @@ class Data extends AbstractData
      * @param StoreManagerInterface $storeManager
      * @param DriverFile $driverFile
      * @param IoFile $ioFile
-     * @param AdapterFactory $imageFactory
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
@@ -80,12 +73,10 @@ class Data extends AbstractData
         StoreManagerInterface $storeManager,
         DriverFile $driverFile,
         IoFile $ioFile,
-        AdapterFactory $imageFactory,
         CollectionFactory $collectionFactory
     ) {
         $this->driverFile        = $driverFile;
         $this->ioFile            = $ioFile;
-        $this->adapterFactory    = $imageFactory;
         $this->collectionFactory = $collectionFactory;
 
         parent::__construct($context, $objectManager, $storeManager);
@@ -237,7 +228,22 @@ class Data extends AbstractData
         if ($this->getConfigGeneral('backup_image')) {
             $this->processImage($path, true);
         }
-        $this->ioFile->read($url, $path);
+        if ($this->getOptimizeOptions('force_permission')) {
+            $this->ioFile->read($url, $path);
+            $this->ioFile->chmod($path, $this->getOptimizeOptions('select_permission'));
+        } else {
+            $this->ioFile->read($url, $path);
+        }
+    }
+
+    /**
+     * @param $path
+     *
+     * @return bool
+     */
+    public function fileExists($path)
+    {
+        return $this->ioFile->fileExists($path);
     }
 
     /**
@@ -262,7 +268,9 @@ class Data extends AbstractData
             $pathInfo = $this->getPathInfo($path);
             $folder   = 'var/backup_image/' . $pathInfo['dirname'];
             $this->ioFile->checkAndCreateFolder($folder);
-            $this->ioFile->write('var/backup_image/' . $path, $path);
+            if (!$this->fileExists('var/backup_image/' . $path)) {
+                $this->ioFile->write('var/backup_image/' . $path, $path);
+            }
         } else {
             $this->ioFile->write($path, 'var/backup_image/' . $path);
         }
