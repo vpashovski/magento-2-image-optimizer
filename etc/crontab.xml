@@ -23,10 +23,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
         <job name="mpimageoptimizer_cronjob_optimize" instance="Mageplaza\ImageOptimizer\Cron\Optimize" method="execute">
-            <schedule>* * * * *</schedule>
+            <config_path>crontab/default/jobs/mpimageoptimizer_cronjob_optimize/schedule/cron_expr</config_path>
         </job>
         <job name="mpimageoptimizer_cronjob_scan" instance="Mageplaza\ImageOptimizer\Cron\Scan" method="execute">
-            <schedule>0 * * * *</schedule>
+            <config_path>crontab/default/jobs/mpimageoptimizer_cronjob_scan/schedule/cron_expr</config_path>
         </job>
     </group>
 </config>

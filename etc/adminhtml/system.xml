@@ -100,8 +100,12 @@
                     <label>Enable Image Scan</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Scan Schedule</label>
+                    <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
+                    <comment><![CDATA[
+                <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
+                ]]></comment>
                     <depends>
                         <field id="enabled_scan">1</field>
                     </depends>
@@ -110,8 +114,12 @@
                     <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Optimization Schedule</label>
+                    <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
+                    <comment><![CDATA[
+                <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
+                ]]></comment>
                     <depends>
                         <field id="enabled_optimize">1</field>
                     </depends>

@@ -26,6 +26,7 @@ use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\Collection as ImageOptimizerCollection;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -76,6 +77,9 @@ class Optimize
         $this->logger = $logger;
     }
 
+    /**
+     * @return $this
+     */
     public function execute()
     {
         if (!$this->helperData->isEnabled() || !$this->helperData->getCronJobConfig('enabled_optimize')) {
@@ -85,11 +89,24 @@ class Optimize
         /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('status', Status::PENDING);
-        $pathValues = $collection->getColumnValues('path');
+        $collection->setPageSize(100);
 
-//        foreach ($pathValues as $path) {
-//
-//        }
+        try {
+            foreach ($collection as $image) {
+                $result = $this->helperData->optimizeImage($image->getData('path'));
+                $data   = [
+                    'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
+                    'percent'       => isset($result['error']) ? '' : $result['percent'],
+                    'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,
+                    'message'       => isset($result['error']) ? $result['error_long'] : ''
+                ];
+                $image->addData($data);
+                $this->resourceModel->save($image);
+            }
+        } catch (Exception $e) {
+            $this->logger->critical($e->getMessage());
+        }
+
         return $this;
     }
 }

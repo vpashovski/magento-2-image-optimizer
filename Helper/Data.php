@@ -317,9 +317,9 @@ class Data extends AbstractData
         if ($this->getConfigGeneral('backup_image')) {
             $this->processImage($path, true);
         }
-        //        if ($this->getOptimizeOptions('force_permission')) {
-        //            $this->driverFile->changePermissions($path, (int) $this->getOptimizeOptions('select_permission'));
-        //        }
+        if ($this->getOptimizeOptions('force_permission')) {
+            $this->driverFile->changePermissions($path, (int) $this->getOptimizeOptions('select_permission'));
+        }
 
         $this->ioFile->read($url, $path);
     }
