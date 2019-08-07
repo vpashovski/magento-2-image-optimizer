@@ -38,13 +38,19 @@ class Action extends AbstractComponent
      */
     protected $actions;
 
+    /**
+     * @var Data
+     */
     protected $helperData;
 
     /**
+     * Action constructor.
+     *
      * @param ContextInterface $context
+     * @param Data $helperData
      * @param array $components
      * @param array $data
-     * @param array|\JsonSerializable $actions
+     * @param null $actions
      */
     public function __construct(
         ContextInterface $context,

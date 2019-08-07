@@ -30,7 +30,7 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 class Collection extends AbstractCollection
 {
     /**
-     * @type string
+     * @var string
      */
     protected $_idFieldName = 'image_id';
 

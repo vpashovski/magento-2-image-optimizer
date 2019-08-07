@@ -44,11 +44,10 @@
                 <field id="image_quality" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Image Quality</label>
                     <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Quality</source_model>
-                    <comment>Specify optimization level for compression.</comment>
                     <comment><![CDATA[
                 <p>Specify optimization level for compression.</p>
-                <p>Lossless is a filter that compresses the data. This doesn’t reduce the quality but it will require the images to be uncompressed before they can be rendered.
-Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.</p>
+                <p>Lossless is a filter that compresses the data. This doesn’t reduce the quality but it will require the images to be uncompressed before they can be rendered.</p>
+                <p>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.</p>
                 ]]></comment>
                 </field>
                 <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
@@ -56,7 +55,8 @@ Custom (Lossy) is a filter that eliminates some of the data. This will degrade t
                     <validate>validate-digits validate-greater-than-zero</validate>
                     <comment><![CDATA[
                 <p>%. between 1 and 100. Default value is 92.</p>
-                <p>For having a good image quality, please remain above 90</p>
+                <p>For having a good image quality, please remain above 90.</p>
+                <p>This option supports only JPG images.</p>
                 ]]></comment>
                     <depends>
                         <field id="image_quality">custom</field>

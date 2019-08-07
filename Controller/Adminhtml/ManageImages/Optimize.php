@@ -49,52 +49,6 @@ use Zend_Http_Response;
 class Optimize extends Image
 {
     /**
-     * @var CurlFactory
-     */
-    protected $curlFactory;
-
-    /**
-     * Optimize constructor.
-     *
-     * @param Context $context
-     * @param ForwardFactory $resultForwardFactory
-     * @param PageFactory $resultPageFactory
-     * @param ImageFactory $imageFactory
-     * @param ResourceImage $resourceModel
-     * @param CollectionFactory $collectionFactory
-     * @param Filter $filter
-     * @param Data $helperData
-     * @param LoggerInterface $logger
-     * @param CurlFactory $curlFactory
-     */
-    public function __construct(
-        Context $context,
-        ForwardFactory $resultForwardFactory,
-        PageFactory $resultPageFactory,
-        ImageFactory $imageFactory,
-        ResourceImage $resourceModel,
-        CollectionFactory $collectionFactory,
-        Filter $filter,
-        Data $helperData,
-        LoggerInterface $logger,
-        CurlFactory $curlFactory
-    ) {
-        $this->curlFactory = $curlFactory;
-
-        parent::__construct(
-            $context,
-            $resultForwardFactory,
-            $resultPageFactory,
-            $imageFactory,
-            $resourceModel,
-            $collectionFactory,
-            $filter,
-            $helperData,
-            $logger
-        );
-    }
-
-    /**
      * @return ResponseInterface|Redirect|ResultInterface
      */
     public function execute()
@@ -142,7 +96,7 @@ class Optimize extends Image
                     return $resultRedirect->setPath('*/*/');
                 }
             }
-            $result = $this->optimizeImage($model->getData('path'));
+            $result = $this->helperData->optimizeImage($model->getData('path'));
             $data   = [
                 'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
                 'percent'       => isset($result['error']) ? '' : $result['percent'],
@@ -154,84 +108,16 @@ class Optimize extends Image
             if ($this->getRequest()->getParam('isAjax')) {
                 return $this->getResponse()->representJson(Data::jsonEncode($model->getData()));
             }
-            $this->messageManager->addSuccessMessage(__('Image(s) have been optimized successfully.'));
+            if (isset($result['error'])) {
+                $this->messageManager->addErrorMessage(__($result['error_long']));
+            } else {
+                $this->messageManager->addSuccessMessage(__('Image(s) have been optimized successfully.'));
+            }
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->logger->critical($e->getMessage());
         }
 
         return $resultRedirect->setPath('*/*/');
-    }
-
-    /**
-     * @param $path
-     *
-     * @return array|mixed
-     * @throws Exception
-     */
-    public function optimizeImage($path)
-    {
-        $result = [];
-        if (!$this->helperData->fileExists($path)) {
-            $result = [
-                'error' => true,
-                'error_long' => __('file does not exist')
-            ];
-
-            return $result;
-        }
-
-        $curl   = $this->curlFactory->create();
-        $url    = 'http://api.resmush.it/?qlty=' . $this->getQuality();
-        try {
-            $params = $this->getParams($path);
-            $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);
-            $resultCurl = $curl->read();
-            if (!empty($resultCurl)) {
-                $responseBody = Zend_Http_Response::extractBody($resultCurl);
-                $result       += Data::jsonDecode($responseBody);
-            }
-        } catch (Exception $e) {
-            $result['error']      = true;
-            $result['error_long'] = $e->getMessage();
-        }
-        $curl->close();
-
-        if (isset($result['dest'])) {
-            $this->helperData->saveImage($result['dest'], $path);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param $path
-     *
-     * @return array
-     */
-    public function getParams($path)
-    {
-        $mime   = mime_content_type($path);
-        $info   = $this->helperData->getPathInfo($path);
-        $name   = $info['basename'];
-        $output = new CURLFile($path, $mime, $name);
-        $params = [
-            'files' => $output
-        ];
-
-        return $params;
-    }
-
-    /**
-     * @return int|mixed
-     */
-    public function getQuality()
-    {
-        $quality = 100;
-        if ($this->helperData->getOptimizeOptions('image_quality') === Quality::CUSTOM) {
-            $quality = $this->helperData->getOptimizeOptions('quality_percent');
-        }
-
-        return $quality;
     }
 }

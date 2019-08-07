@@ -21,17 +21,22 @@
 
 namespace Mageplaza\ImageOptimizer\Helper;
 
+use CURLFile;
 use Exception;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Filesystem\Io\File as IoFile;
+use Magento\Framework\HTTP\Adapter\CurlFactory;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
+use Mageplaza\ImageOptimizer\Model\Config\Source\Quality;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\Collection as ImageOptimizerCollection;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
+use Zend_Http_Client;
+use Zend_Http_Response;
 
 /**
  * Class Data
@@ -58,6 +63,11 @@ class Data extends AbstractData
     protected $collectionFactory;
 
     /**
+     * @var CurlFactory
+     */
+    protected $curlFactory;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
@@ -65,6 +75,7 @@ class Data extends AbstractData
      * @param StoreManagerInterface $storeManager
      * @param DriverFile $driverFile
      * @param IoFile $ioFile
+     * @param CurlFactory $curlFactory
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
@@ -73,10 +84,12 @@ class Data extends AbstractData
         StoreManagerInterface $storeManager,
         DriverFile $driverFile,
         IoFile $ioFile,
+        CurlFactory $curlFactory,
         CollectionFactory $collectionFactory
     ) {
         $this->driverFile        = $driverFile;
         $this->ioFile            = $ioFile;
+        $this->curlFactory       = $curlFactory;
         $this->collectionFactory = $collectionFactory;
 
         parent::__construct($context, $objectManager, $storeManager);
@@ -164,15 +177,15 @@ class Data extends AbstractData
      */
     public function scanFiles()
     {
-        $images          = [];
-        $includePatterns = ['#.jpg#', '#.png#', '#.gif#', '#.tif#', '#.bmp#'];
-        /** @var ImageOptimizerCollection $collection */
+        $images               = [];
+        $includePatterns      = ['#.jpg#', '#.png#', '#.gif#', '#.tif#', '#.bmp#'];
         $excludeDirectories   = $this->getExcludeDirectories();
         $excludeDirectories[] = 'pub/media/catalog/product/cache/';
         $includeDirectories   = $this->getIncludeDirectories();
         if (empty($includeDirectories)) {
             $includeDirectories = ['pub/media/'];
         }
+        /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
         $pathValues = $collection->getColumnValues('path');
 
@@ -218,6 +231,82 @@ class Data extends AbstractData
     }
 
     /**
+     * @param $path
+     *
+     * @return array|mixed
+     */
+    public function optimizeImage($path)
+    {
+        $result = [];
+        if (!$this->fileExists($path)) {
+            $result = [
+                'error'      => true,
+                'error_long' => __('file does not exist')
+            ];
+
+            return $result;
+        }
+
+        $curl = $this->curlFactory->create();
+        $url  = 'http://api.resmush.it/?qlty=' . $this->getQuality();
+        try {
+            $params = $this->getParams($path);
+            $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);
+            $resultCurl = $curl->read();
+            if (!empty($resultCurl)) {
+                $responseBody = Zend_Http_Response::extractBody($resultCurl);
+                $result       += Data::jsonDecode($responseBody);
+            }
+        } catch (Exception $e) {
+            $result['error']      = true;
+            $result['error_long'] = $e->getMessage();
+        }
+        $curl->close();
+
+        if (isset($result['dest'])) {
+            try {
+                $this->saveImage($result['dest'], $path);
+            } catch (Exception $e) {
+                $result['error']      = true;
+                $result['error_long'] = $e->getMessage();
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return array
+     */
+    public function getParams($path)
+    {
+        $mime   = mime_content_type($path);
+        $info   = $this->getPathInfo($path);
+        $name   = $info['basename'];
+        $output = new CURLFile($path, $mime, $name);
+        $params = [
+            'files' => $output
+        ];
+
+        return $params;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getQuality()
+    {
+        $quality = 100;
+        if ($this->getOptimizeOptions('image_quality') === Quality::CUSTOM) {
+            $quality = $this->getOptimizeOptions('quality_percent');
+        }
+
+        return $quality;
+    }
+
+    /**
      * @param $url
      * @param $path
      *
@@ -228,12 +317,11 @@ class Data extends AbstractData
         if ($this->getConfigGeneral('backup_image')) {
             $this->processImage($path, true);
         }
-        if ($this->getOptimizeOptions('force_permission')) {
-            $this->ioFile->read($url, $path);
-            $this->ioFile->chmod($path, $this->getOptimizeOptions('select_permission'));
-        } else {
-            $this->ioFile->read($url, $path);
-        }
+        //        if ($this->getOptimizeOptions('force_permission')) {
+        //            $this->driverFile->changePermissions($path, (int) $this->getOptimizeOptions('select_permission'));
+        //        }
+
+        $this->ioFile->read($url, $path);
     }
 
     /**
