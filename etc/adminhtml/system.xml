@@ -127,6 +127,14 @@
                         <field id="enabled_optimize">1</field>
                     </depends>
                 </field>
+                <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Limit Number of Images</label>
+                    <comment>The number of images will be optimized during a process of running cronjob or command line. Too many images will take a long time to optimize.</comment>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="enabled_optimize">1</field>
+                    </depends>
+                </field>
             </group>
         </section>
     </system>

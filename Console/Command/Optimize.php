@@ -19,22 +19,26 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-namespace Mageplaza\ImageOptimizer\Cron;
+namespace Mageplaza\ImageOptimizer\Console\Command;
 
+use Exception;
 use Mageplaza\ImageOptimizer\Helper\Data;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\Collection as ImageOptimizerCollection;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
-use Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class Optimize
- * @package Mageplaza\ImageOptimizer\Cron
+ * @package Mageplaza\ImageOptimizer\Console\Command
  */
-class Optimize
+class Optimize extends Command
 {
+
     /**
      * @var Data
      */
@@ -58,34 +62,51 @@ class Optimize
     protected $logger;
 
     /**
-     * Optimize constructor.
-     *
-     * @param Data $helperData
-     * @param ResourceImage $resourceModel
-     * @param CollectionFactory $collectionFactory
-     * @param LoggerInterface $logger
+     * @inheritDoc
      */
-    public function __construct(
-        Data $helperData,
-        ResourceImage $resourceModel,
-        CollectionFactory $collectionFactory,
-        LoggerInterface $logger
-    ) {
-        $this->helperData = $helperData;
-        $this->resourceModel = $resourceModel;
-        $this->collectionFactory = $collectionFactory;
-        $this->logger = $logger;
+    protected function configure()
+    {
+        $this->setName('mpimageoptimizer:optimize');
+        $this->setDescription('Image Optimizer console command.');
+
+        parent::configure();
     }
 
     /**
-     * @return $this
+     * Optimize constructor.
+     *
+     * @param CollectionFactory $collectionFactory
+     * @param ResourceImage $resourceModel
+     * @param Data $helperData
+     * @param LoggerInterface $logger
+     * @param string|null $name
      */
-    public function execute()
+    public function __construct(
+        CollectionFactory $collectionFactory,
+        ResourceImage $resourceModel,
+        Data $helperData,
+        LoggerInterface $logger,
+        string $name = null
+    ) {
+        parent::__construct($name);
+
+        $this->collectionFactory = $collectionFactory;
+        $this->resourceModel     = $resourceModel;
+        $this->helperData        = $helperData;
+        $this->logger            = $logger;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return $this|int|null
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->helperData->isEnabled() || !$this->helperData->getCronJobConfig('enabled_optimize')) {
+        if (!$this->helperData->isEnabled()) {
             return $this;
         }
-
         /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('status', Status::PENDING);
@@ -103,7 +124,9 @@ class Optimize
                 $image->addData($data);
                 $this->resourceModel->save($image);
             }
+            $output->writeln('<info>Image(s) have been optimized successfully.</info>');
         } catch (Exception $e) {
+            $output->writeln('<error>Problem occurred during optimization.</error>');
             $this->logger->critical($e->getMessage());
         }
 

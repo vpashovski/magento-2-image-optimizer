@@ -34,4 +34,11 @@
             <argument name="resourceModel" xsi:type="string">Mageplaza\ImageOptimizer\Model\ResourceModel\Image</argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="mpimageoptimizer_command_optimize" xsi:type="object">Mageplaza\ImageOptimizer\Console\Command\Optimize</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
