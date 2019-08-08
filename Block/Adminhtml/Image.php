@@ -37,19 +37,19 @@ class Image extends Container
     protected function _prepareLayout()
     {
         $addButtonOptimize = [
-            'id' => 'optimize_image',
-            'label' => __('Optimize Image'),
-            'class' => 'primary',
+            'id'           => 'optimize_image',
+            'label'        => __('Optimize Image'),
+            'class'        => 'primary',
             'button_class' => '',
         ];
         $this->buttonList->add('optimize_image', $addButtonOptimize);
 
         $addButtonScan = [
-            'id' => 'scan_image',
-            'label' => __('Scan Image'),
-            'class' => 'primary',
+            'id'           => 'scan_image',
+            'label'        => __('Scan Image'),
+            'class'        => 'primary',
             'button_class' => '',
-            'onclick' => 'setLocation(\'' . $this->getScanUrl() . '\')',
+            'onclick'      => 'setLocation(\'' . $this->getScanUrl() . '\')',
         ];
         $this->buttonList->add('scan_image', $addButtonScan);
 

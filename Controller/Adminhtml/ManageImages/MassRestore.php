@@ -64,10 +64,10 @@ class MassRestore extends Image
                 $image->save();
                 $updated++;
             } catch (Exception $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
                 $this->messageManager->addErrorMessage(
                     __('Something went wrong while restore for %1.', $image->getData('path'))
                 );
+                $this->logger->critical($e->getMessage());
             }
         }
 

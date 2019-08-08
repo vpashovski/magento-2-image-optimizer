@@ -45,7 +45,7 @@ use Zend_Http_Response;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpimageoptimizer';
-    const IMAGE_TYPE_PNG      = 3;
+    const IMAGE_TYPE_PNG     = 3;
 
     /**
      * @var DriverFile
@@ -367,6 +367,9 @@ class Data extends AbstractData
                 $this->ioFile->write('var/backup_image/' . $path, $path, 0777);
             }
         } else {
+            if (!$this->fileExists('var/backup_image/' . $path)) {
+                throw new Exception("Image has not been backed up.");
+            }
             $this->ioFile->write($path, 'var/backup_image/' . $path);
         }
     }

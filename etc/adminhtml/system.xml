@@ -36,7 +36,7 @@
                 <field id="backup_image" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Image Backup</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Backup in var/backup_image directory</comment>
+                    <comment>Backup original image in var/backup_image directory</comment>
                 </field>
             </group>
             <group id="optimize_options" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -52,10 +52,10 @@
                 </field>
                 <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Quality Percent</label>
-                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
                     <comment><![CDATA[
-                <p>%. between 1 and 100. Default value is 92.</p>
-                <p>For having a good image quality, please remain above 90.</p>
+                <p>The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92</p>
+                <p>For good image quality, please remain above 90. The higher quality percent, the lower compression level.</p>
                 <p>This option supports only JPG images.</p>
                 ]]></comment>
                     <depends>
@@ -77,7 +77,7 @@
                     Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a>
                     <p>Example: 0755. Default: 0777</p>
                 ]]></comment>
-                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
                     <depends>
                         <field id="force_permission">1</field>
                     </depends>
@@ -106,6 +106,7 @@
                 <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Scan Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
+                    <validate>validate-no-empty</validate>
                     <comment><![CDATA[
                 <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
                 ]]></comment>
@@ -120,6 +121,7 @@
                 <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Optimization Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
+                    <validate>validate-no-empty</validate>
                     <comment><![CDATA[
                 <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
                 ]]></comment>
@@ -130,7 +132,7 @@
                 <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Limit Number of Images</label>
                     <comment>The number of images will be optimized during a process of running cronjob or command line. Too many images will take a long time to optimize.</comment>
-                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
                     <depends>
                         <field id="enabled_optimize">1</field>
                     </depends>

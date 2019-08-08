@@ -45,29 +45,21 @@ class ProgressBar extends Template
     protected $collectionFactory;
 
     /**
-     * @var Status
-     */
-    protected $imageStatus;
-
-    /**
      * ProgressBar constructor.
      *
      * @param Context $context
      * @param CollectionFactory $collectionFactory
      * @param Data $helperData
-     * @param Status $imageStatus
      * @param array $data
      */
     public function __construct(
         Context $context,
         CollectionFactory $collectionFactory,
         Data $helperData,
-        Status $imageStatus,
         array $data = []
     ) {
         $this->collectionFactory = $collectionFactory;
-        $this->helperData = $helperData;
-        $this->imageStatus = $imageStatus;
+        $this->helperData        = $helperData;
 
         parent::__construct($context, $data);
     }
@@ -127,7 +119,7 @@ class ProgressBar extends Template
         if ($this->getTotalImage() === 0 || $this->getTotalByStatus($status) === 0) {
             return '0%';
         }
-        $width = $this->getTotalByStatus($status)/$this->getTotalImage();
+        $width = $this->getTotalByStatus($status) / $this->getTotalImage();
 
         return round($width * 100, 3) . '%';
     }
