@@ -45,7 +45,7 @@ use Zend_Http_Response;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpimageoptimizer';
-    const IMAGETYPE_PNG      = 3;
+    const IMAGE_TYPE_PNG      = 3;
 
     /**
      * @var DriverFile
@@ -207,7 +207,7 @@ class Data extends AbstractData
                             && !in_array($file, $pathValues, true)
                         ) {
                             $imageType = exif_imagetype($file);
-                            if ($imageType === self::IMAGETYPE_PNG
+                            if ($imageType === self::IMAGE_TYPE_PNG
                                 && $this->skipTransparentImage()
                                 && imagecolortransparent(imagecreatefrompng($file)) >= 0
                             ) {
@@ -318,10 +318,15 @@ class Data extends AbstractData
             $this->processImage($path, true);
         }
         if ($this->getOptimizeOptions('force_permission')) {
-            $this->driverFile->changePermissions($path, (int) $this->getOptimizeOptions('select_permission'));
+            $this->driverFile->deleteFile($path);
+            $this->ioFile->write(
+                $path,
+                $this->ioFile->read($url),
+                octdec($this->getOptimizeOptions('select_permission'))
+            );
+        } else {
+            $this->ioFile->read($url, $path);
         }
-
-        $this->ioFile->read($url, $path);
     }
 
     /**
@@ -345,6 +350,8 @@ class Data extends AbstractData
     }
 
     /**
+     * Handle image backup / rollback process
+     *
      * @param $path
      * @param bool $backup
      *
@@ -357,7 +364,7 @@ class Data extends AbstractData
             $folder   = 'var/backup_image/' . $pathInfo['dirname'];
             $this->ioFile->checkAndCreateFolder($folder);
             if (!$this->fileExists('var/backup_image/' . $path)) {
-                $this->ioFile->write('var/backup_image/' . $path, $path);
+                $this->ioFile->write('var/backup_image/' . $path, $path, 0777);
             }
         } else {
             $this->ioFile->write($path, 'var/backup_image/' . $path);

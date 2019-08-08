@@ -99,6 +99,7 @@ abstract class Image extends Action
      * @param ImageFactory $imageFactory
      * @param ResourceImage $resourceModel
      * @param CollectionFactory $collectionFactory
+     * @param Filter $filter
      * @param Data $helperData
      * @param LoggerInterface $logger
      */

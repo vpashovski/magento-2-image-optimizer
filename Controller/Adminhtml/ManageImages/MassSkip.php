@@ -52,14 +52,14 @@ class MassSkip extends Image
 
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $updated    = 0;
-        foreach ($collection as $banner) {
+        foreach ($collection as $image) {
             try {
-                $banner->setStatus(Status::SKIPPED)->save();
+                $image->setStatus(Status::SKIPPED)->save();
                 $updated++;
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 $this->messageManager->addErrorMessage(
-                    __('Something went wrong while updating status for %1.', $banner->getName())
+                    __('Something went wrong while updating status for %1.', $image->getName())
                 );
             }
         }

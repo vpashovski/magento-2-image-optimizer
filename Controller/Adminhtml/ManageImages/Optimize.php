@@ -21,26 +21,15 @@
 
 namespace Mageplaza\ImageOptimizer\Controller\Adminhtml\ManageImages;
 
-use CURLFile;
 use Exception;
-use Magento\Backend\App\Action\Context;
-use Magento\Backend\Model\View\Result\ForwardFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\HTTP\Adapter\CurlFactory;
-use Magento\Framework\View\Result\PageFactory;
-use Magento\Ui\Component\MassAction\Filter;
 use Mageplaza\ImageOptimizer\Controller\Adminhtml\Image;
 use Mageplaza\ImageOptimizer\Helper\Data;
-use Mageplaza\ImageOptimizer\Model\Config\Source\Quality;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ImageFactory;
-use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
-use Psr\Log\LoggerInterface;
-use Zend_Http_Client;
-use Zend_Http_Response;
 
 /**
  * Class Optimize

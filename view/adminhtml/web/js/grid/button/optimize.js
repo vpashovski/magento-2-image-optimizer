@@ -22,7 +22,7 @@ define([
     'jquery',
     'Magento_Ui/js/modal/confirm',
     'Magento_Ui/js/modal/alert',
-    'Magento_Ui/js/modal/modal',
+    'Magento_Ui/js/modal/modal'
 ], function ($, confirmation, alert) {
     "use strict";
     var btnOptimize = $('#optimize_image');
@@ -45,7 +45,7 @@ define([
                 if (self.options.isEnabled === '0') {
                     alert({
                         title: $.mage.__('Optimize Image'),
-                        content: $.mage.__('The module has been disabled.'),
+                        content: $.mage.__('The module has been disabled.')
                     });
 
                     return;
@@ -62,7 +62,7 @@ define([
             } else {
                 alert({
                     title: $.mage.__('Optimize Image'),
-                    content: $.mage.__('You need to scan all images before starting optimization process.'),
+                    content: $.mage.__('You need to scan all images before starting optimization process.')
                 });
             }
         },
@@ -125,11 +125,11 @@ define([
         },
 
         loadAjax: function () {
-            var self       = this,
-                collection = this.options.collection.items,
+            var self              = this,
+                collection        = this.options.collection.items,
                 contentProcessing = $('.mpimageoptimizer-modal-content-processing'),
-                item = collection[this.options.index],
-                percent = 100 * (this.options.index + 1) / collection.length;
+                item              = collection[this.options.index],
+                percent           = 100 * (this.options.index + 1) / collection.length;
 
             if (this.options.isStop) {
                 return;
@@ -162,9 +162,13 @@ define([
         },
 
         getContent: function (percent, path, status) {
-            $('#progress-bar-optimize').width(percent.toFixed(2) + '%');
-            $('#mpimageoptimizer-modal-percent').text(percent.toFixed(2) + '%');
-            $('#mpimageoptimizer-modal-content').append('<p>' + path + ': ' + '<strong>' + status + '</strong>' + '</p>');
+            var progressBar  = $('#progress-bar-optimize'),
+                modalPercent = $('#mpimageoptimizer-modal-percent'),
+                modalContent = $('#mpimageoptimizer-modal-content');
+
+            progressBar.width(percent.toFixed(2) + '%');
+            modalPercent.text(percent.toFixed(2) + '%');
+            modalContent.append('<p>' + path + ': ' + '<strong>' + status + '</strong>' + '</p>');
         }
     });
 

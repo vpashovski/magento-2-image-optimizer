@@ -21,6 +21,7 @@
 
 namespace Mageplaza\ImageOptimizer\Ui\Component;
 
+use JsonSerializable;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Ui\Component\AbstractComponent;
 use Mageplaza\ImageOptimizer\Helper\Data;
@@ -34,7 +35,7 @@ class Action extends AbstractComponent
     const NAME = 'action';
 
     /**
-     * @var array|\JsonSerializable
+     * @var array|JsonSerializable
      */
     protected $actions;
 

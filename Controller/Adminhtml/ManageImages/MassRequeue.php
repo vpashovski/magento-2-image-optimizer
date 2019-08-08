@@ -59,7 +59,7 @@ class MassRequeue extends Image
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 $this->messageManager->addErrorMessage(
-                    __('Something went wrong while updating status for %1.', $banner->getName())
+                    __('Something went wrong while requeue for %1.', $image->getData('path'))
                 );
             }
         }

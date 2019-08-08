@@ -46,7 +46,7 @@
                     <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Quality</source_model>
                     <comment><![CDATA[
                 <p>Specify optimization level for compression.</p>
-                <p>Lossless is a filter that compresses the data. This doesn’t reduce the quality but it will require the images to be uncompressed before they can be rendered.</p>
+                <p>Lossless is a filter that compresses the data. This does not reduce the quality but it will require the images to be uncompressed before they can be rendered.</p>
                 <p>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.</p>
                 ]]></comment>
                 </field>
@@ -73,7 +73,10 @@
                 </field>
                 <field id="select_permission" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Select Permission</label>
-                    <comment>Enter the number representing certain permission. Refer the list here.</comment>
+                    <comment><![CDATA[
+                    Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a>
+                    <p>Example: 0755. Default: 0777</p>
+                ]]></comment>
                     <validate>validate-digits validate-greater-than-zero</validate>
                     <depends>
                         <field id="force_permission">1</field>
