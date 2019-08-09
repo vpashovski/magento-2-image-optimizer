@@ -52,7 +52,7 @@
                 </field>
                 <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Quality Percent</label>
-                    <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
+                    <validate>validate-no-empty validate-digits validate-greater-than-zero validate-digits-range digits-range-1-100</validate>
                     <comment><![CDATA[
                 <p>The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92</p>
                 <p>For good image quality, please remain above 90. The higher quality percent, the lower compression level.</p>
