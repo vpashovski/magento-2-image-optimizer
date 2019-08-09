@@ -22,8 +22,7 @@ define([
     'jquery',
     'Magento_Ui/js/grid/massactions',
     'Magento_Ui/js/modal/confirm',
-    'Mageplaza_ImageOptimizer/js/grid/button/optimize',
-    'Magento_Ui/js/modal/modal'
+    'Mageplaza_ImageOptimizer/js/grid/button/optimize'
 ], function ($, Massactions, confirmation, imageOptimizer) {
     'use strict';
 

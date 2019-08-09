@@ -19,9 +19,8 @@
  */
 
 define([
-    'underscore',
     'Magento_Ui/js/grid/columns/select'
-], function (_, Column) {
+], function (Column) {
     'use strict';
 
     return Column.extend({
