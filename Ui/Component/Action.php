@@ -71,9 +71,7 @@ class Action extends AbstractComponent
     public function prepare()
     {
         if (!$this->helperData->isEnabled()) {
-            $config                  = $this->getConfiguration();
-            $config['actionDisable'] = true;
-            $this->setData('config', $config);
+            $this->setData('config', []);
         }
 
         if (!empty($this->actions)) {
