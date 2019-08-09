@@ -84,7 +84,7 @@
                 </field>
             </group>
             <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Directory</label>
+                <label>Scan Directory</label>
                 <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Included Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
