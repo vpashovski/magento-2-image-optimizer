@@ -112,8 +112,8 @@ class Optimize extends Command
         $collection->addFieldToFilter('status', Status::PENDING);
         $collection->setPageSize($this->helperData->getCronJobConfig('limit_number'));
 
-        try {
-            foreach ($collection as $image) {
+        foreach ($collection as $image) {
+            try {
                 $result = $this->helperData->optimizeImage($image->getData('path'));
                 $data   = [
                     'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
@@ -123,11 +123,11 @@ class Optimize extends Command
                 ];
                 $image->addData($data);
                 $this->resourceModel->save($image);
+                $output->writeln(__('<info>Image %1 have been optimized successfully.</info>', $image->getData('path')));
+            } catch (Exception $e) {
+                $output->writeln('<error>Problem occurred during optimization.</error>');
+                $this->logger->critical($e->getMessage());
             }
-            $output->writeln('<info>Image(s) have been optimized successfully.</info>');
-        } catch (Exception $e) {
-            $output->writeln('<error>Problem occurred during optimization.</error>');
-            $this->logger->critical($e->getMessage());
         }
 
         return $this;

@@ -89,9 +89,9 @@ class Schedule extends Value
         $runModelPath = '',
         array $data = []
     ) {
-        $this->_runModelPath = $runModelPath;
+        $this->_runModelPath       = $runModelPath;
         $this->_configValueFactory = $configValueFactory;
-        $this->messageManager = $messageManager;
+        $this->messageManager      = $messageManager;
 
         parent::__construct(
             $context,
@@ -110,9 +110,9 @@ class Schedule extends Value
      */
     public function afterSave()
     {
-        $enableScan = $this->getData('groups/cron_job/fields/enabled_scan/value');
-        $scanSchedule = $this->getData('groups/cron_job/fields/scan_schedule/value');
-        $enableOptimize = $this->getData('groups/cron_job/fields/enabled_optimize/value');
+        $enableScan       = $this->getData('groups/cron_job/fields/enabled_scan/value');
+        $scanSchedule     = $this->getData('groups/cron_job/fields/scan_schedule/value');
+        $enableOptimize   = $this->getData('groups/cron_job/fields/enabled_optimize/value');
         $optimizeSchedule = $this->getData('groups/cron_job/fields/optimize_schedule/value');
 
         if ($enableScan) {

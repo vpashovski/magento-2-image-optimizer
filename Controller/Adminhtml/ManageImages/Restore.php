@@ -69,7 +69,9 @@ class Restore extends Image
                 $this->resourceModel->save($model);
                 $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
             } catch (Exception $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
+                $this->messageManager->addErrorMessage(
+                    __('Something went wrong while restore for %1.', $model->getData('path'))
+                );
                 $this->logger->critical($e->getMessage());
             }
         }
