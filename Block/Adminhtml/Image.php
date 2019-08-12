@@ -38,7 +38,7 @@ class Image extends Container
     {
         $addButtonOptimize = [
             'id'           => 'optimize_image',
-            'label'        => __('Optimize Image'),
+            'label'        => __('Optimize Images'),
             'class'        => 'primary',
             'button_class' => '',
         ];
@@ -46,7 +46,7 @@ class Image extends Container
 
         $addButtonScan = [
             'id'           => 'scan_image',
-            'label'        => __('Scan Image'),
+            'label'        => __('Scan Images'),
             'class'        => 'primary',
             'button_class' => '',
             'onclick'      => 'setLocation(\'' . $this->getScanUrl() . '\')',

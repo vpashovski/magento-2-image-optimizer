@@ -186,18 +186,18 @@
                 </item>
             </argument>
         </column>
-        <column name="origin_size">
+        <column name="origin_size" class="Mageplaza\ImageOptimizer\Ui\Component\Listing\Column\SizeColumns">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Original Size (Byte)</item>
+                    <item name="label" xsi:type="string" translate="true">Original Size</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>
         </column>
-        <column name="optimize_size">
+        <column name="optimize_size" class="Mageplaza\ImageOptimizer\Ui\Component\Listing\Column\SizeColumns">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Optimized Size (Byte)</item>
+                    <item name="label" xsi:type="string" translate="true">Optimized Size</item>
                     <item name="visible" xsi:type="boolean">true</item>
                 </item>
             </argument>

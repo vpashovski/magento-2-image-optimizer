@@ -202,7 +202,7 @@ class Data extends AbstractData
                         }
                     }
                     foreach ($includePatterns as $pattern) {
-                        if (preg_match($pattern, $file)
+                        if (preg_match($pattern, strtolower($file))
                             && !array_key_exists($file, $images)
                             && !in_array($file, $pathValues, true)
                         ) {
@@ -231,6 +231,19 @@ class Data extends AbstractData
     }
 
     /**
+     * Build end point api
+     *
+     * @return string
+     */
+    public function buildEndpointUrl()
+    {
+        $endpoint = 'http://api.resmush.it/';
+        $url  = $endpoint . '/?qlty=' . $this->getQuality();
+
+        return $url;
+    }
+
+    /**
      * @param $path
      *
      * @return array|mixed
@@ -248,7 +261,9 @@ class Data extends AbstractData
         }
 
         $curl = $this->curlFactory->create();
-        $url  = 'http://api.resmush.it/?qlty=' . $this->getQuality();
+        //End point
+        $url = $this->buildEndpointUrl();
+
         try {
             $params = $this->getParams($path);
             $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);

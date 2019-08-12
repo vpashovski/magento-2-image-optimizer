@@ -103,7 +103,7 @@
                     <label>Enable Image Scan</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Scan Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
@@ -118,7 +118,7 @@
                     <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Optimization Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
@@ -129,7 +129,7 @@
                         <field id="enabled_optimize">1</field>
                     </depends>
                 </field>
-                <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Limit Number of Images</label>
                     <comment>The number of images will be optimized during a process of running cronjob or command line. Too many images will take a long time to optimize.</comment>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>

@@ -38,7 +38,7 @@
                 <enabled_scan>0</enabled_scan>
                 <scan_schedule>0 * * * *</scan_schedule>
                 <enabled_optimize>0</enabled_optimize>
-                <optimize_schedule>* * * * *</optimize_schedule>
+                <optimize_schedule>10 * * * *</optimize_schedule>
                 <limit_number>100</limit_number>
             </cron_job>
         </mpimageoptimizer>
