@@ -31,7 +31,8 @@ define([
         options: {
             index: 0,
             isStop: false,
-            confirmMessage: $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize all images?')
+            confirmMessage: $.mage.__('Too many images will take a long time to optimize.' +
+                ' Are you sure you want to optimize all images?')
         },
 
         _create: function () {
@@ -89,7 +90,7 @@ define([
                                     click: function () {
                                         self.options.isStop = true;
                                         confirmation({
-                                            content: $.mage.__('Are you sure you will stop image optimization?'),
+                                            content: $.mage.__('Are you sure you want to stop optimizing images?'),
                                             actions: {
                                                 confirm: function () {
                                                     location.reload();
