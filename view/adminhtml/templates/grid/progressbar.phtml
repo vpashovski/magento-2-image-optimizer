@@ -27,19 +27,23 @@ $collection = $block->getImagePendingCollection();
 ?>
 <div class="mpcss">
     <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar"
+        <div class="progress-bar progress-bar-success" role="progressbar" data-toggle="tooltip"
+             title="<?=/* @noEscape */ $block->getBarContent(Status::SUCCESS) ?>"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SUCCESS) ?>">
             <?=/* @noEscape */ $block->getBarContent(Status::SUCCESS) ?>
         </div>
-        <div class="progress-bar progress-bar-warning" role="progressbar"
+        <div class="progress-bar progress-bar-warning" role="progressbar" data-toggle="tooltip"
+             title="<?=/* @noEscape */ $block->getBarContent(Status::PENDING) ?>"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::PENDING) ?>">
             <?=/* @noEscape */ $block->getBarContent(Status::PENDING) ?>
         </div>
-        <div class="progress-bar progress-bar-infor" role="progressbar"
+        <div class="progress-bar progress-bar-infor" role="progressbar" data-toggle="tooltip"
+             title="<?=/* @noEscape */ $block->getBarContent(Status::SKIPPED) ?>"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::SKIPPED) ?>">
             <?=/* @noEscape */ $block->getBarContent(Status::SKIPPED) ?>
         </div>
-        <div class="progress-bar progress-bar-danger" role="progressbar"
+        <div class="progress-bar progress-bar-danger" role="progressbar" data-toggle="tooltip"
+             title="<?=/* @noEscape */ $block->getBarContent(Status::ERROR) ?>"
              style="width:<?= /* @noEscape */ $block->getWidthByStatus(Status::ERROR) ?>">
             <?=/* @noEscape */ $block->getBarContent(Status::ERROR) ?>
         </div>
