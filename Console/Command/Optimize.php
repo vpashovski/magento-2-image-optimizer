@@ -128,9 +128,14 @@ class Optimize extends Command
                 $this->resourceModel->save($image);
                 $count++;
                 $percent = round(($count / $limit) * 100, 2) . '%';
-                $output->writeln(__('<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>', $image->getData('path'), $count, $limit, $percent));
+                if (isset($result['error'])) {
+                    $output->writeln(__('<error>%1</error>', $result['error_long']));
+                    $this->logger->critical($result['error_long']);
+                } else {
+                    $output->writeln(__('<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>', $image->getData('path'), $count, $limit, $percent));
+                }
             } catch (Exception $e) {
-                $output->writeln('<error>Problem occurred during optimization.</error>');
+                $output->writeln(__('<error>Problem occurred during optimization.</error>'));
                 $this->logger->critical($e->getMessage());
             }
         }

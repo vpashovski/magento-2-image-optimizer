@@ -254,7 +254,7 @@ class Data extends AbstractData
         if (!$this->fileExists($path)) {
             $result = [
                 'error'      => true,
-                'error_long' => __('file does not exist')
+                'error_long' => __('file %1 does not exist', $path)
             ];
 
             return $result;
@@ -383,7 +383,7 @@ class Data extends AbstractData
             }
         } else {
             if (!$this->fileExists('var/backup_image/' . $path)) {
-                throw new Exception("Image has not been backed up.");
+                throw new Exception(__('Image %1 has not been backed up.', $path));
             }
             $this->ioFile->write($path, 'var/backup_image/' . $path);
         }
