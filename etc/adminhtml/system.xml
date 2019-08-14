@@ -22,26 +22,26 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="mpimageoptimizer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="mpimageoptimizer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Image Optimizer</label>
             <tab>mageplaza</tab>
             <resource>Mageplaza_ImageOptimizer::configuration</resource>
-            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>General</label>
-                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Select Yes to enable this module. Support image types: JPG, PNG, GIF, TIF, BMP</comment>
                 </field>
-                <field id="backup_image" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="backup_image" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Image Backup</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Backup original image in var/backup_image directory</comment>
                 </field>
             </group>
-            <group id="optimize_options" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="optimize_options" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Optimize Options</label>
-                <field id="image_quality" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="image_quality" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Image Quality</label>
                     <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Quality</source_model>
                     <comment><![CDATA[
@@ -50,7 +50,7 @@
                 <br>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.
                 ]]></comment>
                 </field>
-                <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Quality Percent</label>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero validate-digits-range digits-range-1-100</validate>
                     <comment><![CDATA[
@@ -62,16 +62,16 @@
                         <field id="image_quality">custom</field>
                     </depends>
                 </field>
-                <field id="skip_transparent_img" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="skip_transparent_img" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Skip Transparent Images</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="force_permission" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="force_permission" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Force File Permission</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>If Yes, you can assign access rights to the optimized image paths. For example: read a file, write a file.</comment>
                 </field>
-                <field id="select_permission" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="select_permission" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Select Permission</label>
                     <comment><![CDATA[
                     Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a>
@@ -83,7 +83,7 @@
                     </depends>
                 </field>
             </group>
-            <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Scan Directory</label>
                 <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Included Directories</label>
@@ -97,13 +97,13 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
             </group>
-            <group id="cron_job" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="cron_job" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Cron Job</label>
-                <field id="enabled_scan" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="enabled_scan" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enable Image Scan</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Scan Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
@@ -114,11 +114,11 @@
                         <field id="enabled_scan">1</field>
                     </depends>
                 </field>
-                <field id="enabled_optimize" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="enabled_optimize" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Optimization Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
@@ -129,7 +129,7 @@
                         <field id="enabled_optimize">1</field>
                     </depends>
                 </field>
-                <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="limit_number" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Limit Number of Images</label>
                     <comment>The number of images will be optimized during a process of running cronjob or command line. Too many images will take a long time to optimize.</comment>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>

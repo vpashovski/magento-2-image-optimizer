@@ -48,9 +48,9 @@ class Delete extends Image
 
         $id = $this->getRequest()->getParam('image_id');
         if ($id) {
+            /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
+            $model = $this->imageFactory->create();
             try {
-                /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-                $model = $this->imageFactory->create();
                 $this->resourceModel->load($model, $id);
                 $this->resourceModel->delete($model);
                 $this->messageManager->addSuccessMessage(__('You deleted the image.'));

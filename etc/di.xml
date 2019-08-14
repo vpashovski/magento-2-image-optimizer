@@ -38,6 +38,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="mpimageoptimizer_command_optimize" xsi:type="object">Mageplaza\ImageOptimizer\Console\Command\Optimize</item>
+                <item name="mpimageoptimizer_command_scan" xsi:type="object">Mageplaza\ImageOptimizer\Console\Command\Scan</item>
             </argument>
         </arguments>
     </type>

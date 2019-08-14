@@ -108,12 +108,15 @@ class Optimize extends Command
             return $this;
         }
         $count = 0;
-        $limit = $this->helperData->getCronJobConfig('limit_number');
-
         /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('status', Status::PENDING);
-        $collection->setPageSize($this->helperData->getCronJobConfig('limit_number'));
+        $limit = $this->helperData->getCronJobConfig('limit_number');
+        if ($limit < $collection->getSize()) {
+            $collection->setPageSize($limit);
+        } else {
+            $limit = $collection->getSize();
+        }
 
         foreach ($collection as $image) {
             try {
@@ -129,13 +132,13 @@ class Optimize extends Command
                 $count++;
                 $percent = round(($count / $limit) * 100, 2) . '%';
                 if (isset($result['error'])) {
-                    $output->writeln(__('<error>%1</error>', $result['error_long']));
+                    $output->writeln(__('<error>The problem occurred during image optimization %1.</error>', $image->getData('path')));
                     $this->logger->critical($result['error_long']);
                 } else {
                     $output->writeln(__('<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>', $image->getData('path'), $count, $limit, $percent));
                 }
             } catch (Exception $e) {
-                $output->writeln(__('<error>Problem occurred during optimization.</error>'));
+                $output->writeln(__('<error>The problem occurred during image optimization %1.</error>', $image->getData('path')));
                 $this->logger->critical($e->getMessage());
             }
         }

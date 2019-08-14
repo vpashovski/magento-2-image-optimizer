@@ -36,7 +36,6 @@ class MassDelete extends Image
 {
     /**
      * @return Redirect|ResponseInterface|ResultInterface
-     * @throws LocalizedException
      */
     public function execute()
     {
@@ -48,7 +47,13 @@ class MassDelete extends Image
             return $resultRedirect->setPath('*/*/');
         }
 
-        $collection = $this->filter->getCollection($this->collectionFactory->create());
+        try {
+            $collection = $this->filter->getCollection($this->collectionFactory->create());
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+
+            return $resultRedirect->setPath('*/*/');
+        }
         $delete     = $collection->getSize();
         $collection->walk('delete');
 

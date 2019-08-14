@@ -25,6 +25,7 @@ use CURLFile;
 use Exception;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Filesystem\Io\File as IoFile;
 use Magento\Framework\HTTP\Adapter\CurlFactory;
@@ -119,6 +120,7 @@ class Data extends AbstractData
             $directories = $this->unserialize($this->getModuleConfig('image_directory/include_directories', $storeId));
         } catch (Exception $e) {
             $directories = [];
+            $this->_logger->error($e->getMessage());
         }
 
         $result = [];
@@ -178,7 +180,7 @@ class Data extends AbstractData
     public function scanFiles()
     {
         $images               = [];
-        $includePatterns      = ['#.jpg#', '#.png#', '#.gif#', '#.tif#', '#.bmp#'];
+        $includePatterns      = ['jpg', 'png', 'gif', 'tif', 'bmp'];
         $excludeDirectories   = $this->getExcludeDirectories();
         $excludeDirectories[] = 'pub/media/catalog/product/cache/';
         $includeDirectories   = $this->getIncludeDirectories();
@@ -190,10 +192,10 @@ class Data extends AbstractData
         $pathValues = $collection->getColumnValues('path');
 
         foreach ($includeDirectories as $directory) {
-            if ($this->driverFile->isExists($directory)) {
+            if ($this->driverFile->isExists($directory) && $this->driverFile->isReadable($directory)) {
                 $files = $this->driverFile->readDirectoryRecursively($directory);
                 foreach ($files as $file) {
-                    if (!$this->driverFile->isFile($file)) {
+                    if (!$this->driverFile->isFile($file) || !$this->driverFile->isReadable($file)) {
                         continue;
                     }
                     foreach ($excludeDirectories as $excludeDirectory) {
@@ -201,26 +203,29 @@ class Data extends AbstractData
                             continue 2;
                         }
                     }
-                    foreach ($includePatterns as $pattern) {
-                        if (preg_match($pattern, strtolower($file))
-                            && !array_key_exists($file, $images)
-                            && !in_array($file, $pathValues, true)
-                        ) {
-                            $imageType = exif_imagetype($file);
-                            if ($imageType === self::IMAGE_TYPE_PNG
-                                && $this->skipTransparentImage()
-                                && imagecolortransparent(imagecreatefrompng($file)) >= 0
-                            ) {
-                                $status = Status::SKIPPED;
-                            } else {
-                                $status = Status::PENDING;
-                            }
-                            $images[$file] = [
-                                'path'        => $file,
-                                'status'      => $status,
-                                'origin_size' => $this->driverFile->stat($file)['size']
-                            ];
+                    $pathInfo = $this->getPathInfo(strtolower($file));
+                    if (!array_key_exists($file, $images)
+                        && !in_array($file, $pathValues, true)
+                        && (isset($pathInfo['extension'])
+                            && in_array($pathInfo['extension'], $includePatterns, true))
+                    ) {
+                        if ($this->driverFile->stat($file)['size'] === 0) {
+                            continue 2;
                         }
+                        $imageType = exif_imagetype($file);
+                        if ($imageType === self::IMAGE_TYPE_PNG
+                            && $this->skipTransparentImage()
+                            && imagecolortransparent(imagecreatefrompng($file)) >= 0
+                        ) {
+                            $status = Status::SKIPPED;
+                        } else {
+                            $status = Status::PENDING;
+                        }
+                        $images[$file] = [
+                            'path'        => $file,
+                            'status'      => $status,
+                            'origin_size' => $this->driverFile->stat($file)['size']
+                        ];
                     }
                 }
             }
@@ -238,9 +243,8 @@ class Data extends AbstractData
     public function buildEndpointUrl()
     {
         $endpoint = 'http://api.resmush.it/';
-        $url  = $endpoint . '/?qlty=' . $this->getQuality();
 
-        return $url;
+        return $endpoint . '/?qlty=' . $this->getQuality();
     }
 
     /**
@@ -263,14 +267,13 @@ class Data extends AbstractData
         $curl = $this->curlFactory->create();
         //End point
         $url = $this->buildEndpointUrl();
-
+        $params = $this->getParams($path);
         try {
-            $params = $this->getParams($path);
             $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);
             $resultCurl = $curl->read();
             if (!empty($resultCurl)) {
                 $responseBody = Zend_Http_Response::extractBody($resultCurl);
-                $result       += Data::jsonDecode($responseBody);
+                $result       += self::jsonDecode($responseBody);
             }
         } catch (Exception $e) {
             $result['error']      = true;
@@ -301,11 +304,10 @@ class Data extends AbstractData
         $info   = $this->getPathInfo($path);
         $name   = $info['basename'];
         $output = new CURLFile($path, $mime, $name);
-        $params = [
+
+        return [
             'files' => $output
         ];
-
-        return $params;
     }
 
     /**
@@ -325,7 +327,8 @@ class Data extends AbstractData
      * @param $url
      * @param $path
      *
-     * @throws Exception
+     * @throws FileSystemException
+     * @throws LocalizedException
      */
     public function saveImage($url, $path)
     {
@@ -370,20 +373,24 @@ class Data extends AbstractData
      * @param $path
      * @param bool $backup
      *
-     * @throws Exception
+     * @throws LocalizedException
      */
     public function processImage($path, $backup = true)
     {
         if ($backup) {
             $pathInfo = $this->getPathInfo($path);
             $folder   = 'var/backup_image/' . $pathInfo['dirname'];
-            $this->ioFile->checkAndCreateFolder($folder);
+            try {
+                $this->ioFile->checkAndCreateFolder($folder);
+            } catch (Exception $e) {
+                $this->_logger->critical($e->getMessage());
+            }
             if (!$this->fileExists('var/backup_image/' . $path)) {
                 $this->ioFile->write('var/backup_image/' . $path, $path, 0777);
             }
         } else {
             if (!$this->fileExists('var/backup_image/' . $path)) {
-                throw new Exception(__('Image %1 has not been backed up.', $path));
+                throw new LocalizedException(__('Image %1 has not been backed up.', $path));
             }
             $this->ioFile->write($path, 'var/backup_image/' . $path);
         }

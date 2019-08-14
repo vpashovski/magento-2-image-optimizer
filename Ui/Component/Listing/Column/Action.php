@@ -21,7 +21,6 @@
 
 namespace Mageplaza\ImageOptimizer\Ui\Component\Listing\Column;
 
-use Magento\Framework\Escaper;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -46,17 +45,11 @@ class Action extends Column
     protected $urlBuilder;
 
     /**
-     * @var Escaper
-     */
-    private $escaper;
-
-    /**
      * Action constructor.
      *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
-     * @param Escaper $escaper
      * @param array $components
      * @param array $data
      */
@@ -64,12 +57,10 @@ class Action extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
-        Escaper $escaper,
         array $components = [],
         array $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
-        $this->escaper    = $escaper;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
