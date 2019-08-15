@@ -49,15 +49,12 @@ class MassDelete extends Image
 
         try {
             $collection = $this->filter->getCollection($this->collectionFactory->create());
+            $delete     = $collection->getSize();
+            $collection->walk('delete');
+            $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $delete));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-
-            return $resultRedirect->setPath('*/*/');
         }
-        $delete     = $collection->getSize();
-        $collection->walk('delete');
-
-        $this->messageManager->addSuccessMessage(__('A total of %1 record(s) have been deleted.', $delete));
 
         return $resultRedirect->setPath('*/*/');
     }

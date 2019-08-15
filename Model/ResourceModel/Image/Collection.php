@@ -22,6 +22,8 @@
 namespace Mageplaza\ImageOptimizer\Model\ResourceModel\Image;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Mageplaza\ImageOptimizer\Model\Image;
+use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ImageResourceModel;
 
 /**
  * Class Collection
@@ -39,6 +41,6 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('Mageplaza\ImageOptimizer\Model\Image', 'Mageplaza\ImageOptimizer\Model\ResourceModel\Image');
+        $this->_init(Image::class, ImageResourceModel::class);
     }
 }

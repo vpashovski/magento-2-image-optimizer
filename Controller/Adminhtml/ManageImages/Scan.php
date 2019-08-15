@@ -48,6 +48,8 @@ class Scan extends Image
         try {
             $data = $this->helperData->scanFiles();
             if (empty($data)) {
+                $this->messageManager->addErrorMessage(__('Sorry, no images are found after scan.'));
+
                 return $resultRedirect->setPath('*/*/');
             }
             $this->resourceModel->insertImagesData($data);

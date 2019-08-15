@@ -23,9 +23,11 @@ namespace Mageplaza\ImageOptimizer\Helper;
 
 use CURLFile;
 use Exception;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Filesystem\Io\File as IoFile;
 use Magento\Framework\HTTP\Adapter\CurlFactory;
@@ -59,6 +61,11 @@ class Data extends AbstractData
     protected $ioFile;
 
     /**
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * @var CollectionFactory
      */
     protected $collectionFactory;
@@ -76,6 +83,7 @@ class Data extends AbstractData
      * @param StoreManagerInterface $storeManager
      * @param DriverFile $driverFile
      * @param IoFile $ioFile
+     * @param Filesystem $filesystem
      * @param CurlFactory $curlFactory
      * @param CollectionFactory $collectionFactory
      */
@@ -85,11 +93,13 @@ class Data extends AbstractData
         StoreManagerInterface $storeManager,
         DriverFile $driverFile,
         IoFile $ioFile,
+        Filesystem $filesystem,
         CurlFactory $curlFactory,
         CollectionFactory $collectionFactory
     ) {
         $this->driverFile        = $driverFile;
         $this->ioFile            = $ioFile;
+        $this->filesystem        = $filesystem;
         $this->curlFactory       = $curlFactory;
         $this->collectionFactory = $collectionFactory;
 
@@ -179,23 +189,26 @@ class Data extends AbstractData
      */
     public function scanFiles()
     {
-        $images               = [];
-        $includePatterns      = ['jpg', 'png', 'gif', 'tif', 'bmp'];
-        $excludeDirectories   = $this->getExcludeDirectories();
-        $excludeDirectories[] = 'pub/media/catalog/product/cache/';
-        $includeDirectories   = $this->getIncludeDirectories();
+        $images             = [];
+        $includePatterns    = ['jpg', 'png', 'gif', 'tif', 'bmp'];
+        $excludeDirectories = $this->getExcludeDirectories();
+        $includeDirectories = $this->getIncludeDirectories();
         if (empty($includeDirectories)) {
-            $includeDirectories = ['pub/media/'];
+            $includeDirectories = [$this->filesystem->getDirectoryRead(DirectoryList::ROOT)->getAbsolutePath()];
+        } else {
+            $includeDirectories = array_map(function ($directory) {
+                return ltrim($directory, '/');
+            }, $includeDirectories);
         }
         /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
         $pathValues = $collection->getColumnValues('path');
 
         foreach ($includeDirectories as $directory) {
-            if ($this->driverFile->isExists($directory) && $this->driverFile->isReadable($directory)) {
+            if ($this->checkDirectoryReadable($directory)) {
                 $files = $this->driverFile->readDirectoryRecursively($directory);
                 foreach ($files as $file) {
-                    if (!$this->driverFile->isFile($file) || !$this->driverFile->isReadable($file)) {
+                    if ($this->checkFileReadable($file)) {
                         continue;
                     }
                     foreach ($excludeDirectories as $excludeDirectory) {
@@ -210,13 +223,10 @@ class Data extends AbstractData
                             && in_array($pathInfo['extension'], $includePatterns, true))
                     ) {
                         if ($this->driverFile->stat($file)['size'] === 0) {
-                            continue 2;
+                            continue;
                         }
-                        $imageType = exif_imagetype($file);
-                        if ($imageType === self::IMAGE_TYPE_PNG
-                            && $this->skipTransparentImage()
-                            && imagecolortransparent(imagecreatefrompng($file)) >= 0
-                        ) {
+
+                        if ($this->isTransparentImage($file)) {
                             $status = Status::SKIPPED;
                         } else {
                             $status = Status::PENDING;
@@ -234,6 +244,43 @@ class Data extends AbstractData
 
         return $images;
     }
+
+    /**
+     * @param string $directory
+     *
+     * @return bool
+     * @throws FileSystemException
+     */
+    protected function checkDirectoryReadable($directory)
+    {
+        return $this->driverFile->isExists($directory) && $this->driverFile->isReadable($directory);
+    }
+
+    /**
+     * @param $file
+     *
+     * @return bool
+     * @throws FileSystemException
+     */
+    protected function checkFileReadable($file)
+    {
+        return !($this->driverFile->isFile($file) && $this->driverFile->isReadable($file));
+    }
+
+    /**
+     * @param $file
+     *
+     * @return bool
+     */
+    protected function isTransparentImage($file)
+    {
+        $imageType = exif_imagetype($file);
+
+        return $imageType === self::IMAGE_TYPE_PNG
+            && $this->skipTransparentImage()
+            && imagecolortransparent(imagecreatefrompng($file)) >= 0;
+    }
+
 
     /**
      * Build end point api
@@ -266,7 +313,7 @@ class Data extends AbstractData
 
         $curl = $this->curlFactory->create();
         //End point
-        $url = $this->buildEndpointUrl();
+        $url    = $this->buildEndpointUrl();
         $params = $this->getParams($path);
         try {
             $curl->write(Zend_Http_Client::POST, $url, '1.1', [], $params);

@@ -23,6 +23,7 @@ namespace Mageplaza\ImageOptimizer\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
+use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ImageResourceModel;
 
 /**
  * Class Image
@@ -48,7 +49,7 @@ class Image extends AbstractModel implements IdentityInterface
     protected function _construct()
     {
         parent::_construct();
-        $this->_init('Mageplaza\ImageOptimizer\Model\ResourceModel\Image');
+        $this->_init(ImageResourceModel::class);
     }
 
     /**

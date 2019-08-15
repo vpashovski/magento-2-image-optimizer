@@ -112,10 +112,11 @@ class Optimize extends Command
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('status', Status::PENDING);
         $limit = $this->helperData->getCronJobConfig('limit_number');
-        if ($limit < $collection->getSize()) {
+        $size = $collection->getSize();
+        if ($limit < $size) {
             $collection->setPageSize($limit);
         } else {
-            $limit = $collection->getSize();
+            $limit = $size;
         }
 
         foreach ($collection as $image) {

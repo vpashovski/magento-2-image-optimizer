@@ -85,13 +85,13 @@
             </group>
             <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Scan Directory</label>
-                <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Included Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                     <comment>If empty, default directory is pub/media/</comment>
                 </field>
-                <field id="exclude_directories" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="exclude_directories" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Excluded Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>

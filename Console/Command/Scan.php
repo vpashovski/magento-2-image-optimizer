@@ -97,6 +97,7 @@ class Scan extends Command
         try {
             $data = $this->helperData->scanFiles();
             if (empty($data)) {
+                $output->writeln(__('<info>Sorry, no images are found after scan.</info>'));
                 return $this;
             }
             $this->resourceModel->insertImagesData($data);

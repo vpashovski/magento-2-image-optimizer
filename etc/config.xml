@@ -34,6 +34,10 @@
                 <force_permission>0</force_permission>
                 <select_permission>0777</select_permission>
             </optimize_options>
+            <image_directory>
+                <include_directories>{"_1565771377953_953":{"path":"pub\/media\/"}}</include_directories>
+                <exclude_directories>{"_1565837542237_237":{"path":"pub\/media\/catalog\/product\/cache\/"}}</exclude_directories>
+            </image_directory>
             <cron_job>
                 <enabled_scan>0</enabled_scan>
                 <scan_schedule>0 * * * *</scan_schedule>
