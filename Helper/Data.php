@@ -48,7 +48,6 @@ use Zend_Http_Response;
 class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH = 'mpimageoptimizer';
-    const IMAGE_TYPE_PNG     = 3;
 
     /**
      * @var DriverFile
@@ -144,7 +143,7 @@ class Data extends AbstractData
             if ($this->checkDirectoryReadable($directory)) {
                 $files = $this->driverFile->readDirectoryRecursively($directory);
                 foreach ($files as $file) {
-                    if ($this->checkFileReadable($file)) {
+                    if (!$this->driverFile->isFile($file)) {
                         continue;
                     }
                     foreach ($excludeDirectories as $excludeDirectory) {
@@ -153,16 +152,17 @@ class Data extends AbstractData
                         }
                     }
                     $pathInfo = $this->getPathInfo(strtolower($file));
+                    $extensionPath = isset($pathInfo['extension']) ? $pathInfo['extension'] : false;
                     if (!array_key_exists($file, $images)
                         && !in_array($file, $pathValues, true)
-                        && (isset($pathInfo['extension'])
-                            && in_array($pathInfo['extension'], $includePatterns, true))
+                        && ($extensionPath && in_array($extensionPath, $includePatterns, true))
                     ) {
-                        if ($this->driverFile->stat($file)['size'] === 0) {
+                        $fileSize = $this->driverFile->stat($file)['size'];
+                        if ($fileSize === 0) {
                             continue;
                         }
 
-                        if ($this->isTransparentImage($file)) {
+                        if ($this->isTransparentImage($file, $extensionPath)) {
                             $status = Status::SKIPPED;
                         } else {
                             $status = Status::PENDING;
@@ -170,7 +170,7 @@ class Data extends AbstractData
                         $images[$file] = [
                             'path'        => $file,
                             'status'      => $status,
-                            'origin_size' => $this->driverFile->stat($file)['size']
+                            'origin_size' => $fileSize
                         ];
                     }
                 }
@@ -213,7 +213,6 @@ class Data extends AbstractData
             $directories = $this->unserialize($this->getModuleConfig('image_directory/include_directories', $storeId));
         } catch (Exception $e) {
             $directories = [];
-            $this->_logger->error($e->getMessage());
         }
 
         $result = [];
@@ -236,17 +235,6 @@ class Data extends AbstractData
     }
 
     /**
-     * @param $file
-     *
-     * @return bool
-     * @throws FileSystemException
-     */
-    protected function checkFileReadable($file)
-    {
-        return !($this->driverFile->isFile($file) && $this->driverFile->isReadable($file));
-    }
-
-    /**
      * @param $path
      *
      * @return mixed
@@ -258,14 +246,13 @@ class Data extends AbstractData
 
     /**
      * @param $file
+     * @param $extensionPath
      *
      * @return bool
      */
-    protected function isTransparentImage($file)
+    protected function isTransparentImage($file, $extensionPath)
     {
-        $imageType = exif_imagetype($file);
-
-        return $imageType === self::IMAGE_TYPE_PNG
+        return $extensionPath === 'png'
             && $this->skipTransparentImage()
             && imagecolortransparent(imagecreatefrompng($file)) >= 0;
     }
