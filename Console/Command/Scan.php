@@ -72,17 +72,6 @@ class Scan extends Command
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function configure()
-    {
-        $this->setName('mpimageoptimizer:scan');
-        $this->setDescription('Image Optimizer console command.');
-
-        parent::configure();
-    }
-
-    /**
      * @param InputInterface $input
      * @param OutputInterface $output
      *
@@ -98,6 +87,7 @@ class Scan extends Command
             $data = $this->helperData->scanFiles();
             if (empty($data)) {
                 $output->writeln(__('<info>Sorry, no images are found after scan.</info>'));
+
                 return $this;
             }
             $this->resourceModel->insertImagesData($data);
@@ -108,5 +98,16 @@ class Scan extends Command
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function configure()
+    {
+        $this->setName('mpimageoptimizer:scan');
+        $this->setDescription('Image Optimizer console command.');
+
+        parent::configure();
     }
 }

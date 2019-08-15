@@ -112,75 +112,11 @@ class Data extends AbstractData
      *
      * @return mixed
      */
-    public function getOptimizeOptions($code = '', $storeId = null)
-    {
-        $code = ($code !== '') ? '/' . $code : '';
-
-        return $this->getModuleConfig('optimize_options' . $code, $storeId);
-    }
-
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
-    public function getIncludeDirectories($storeId = null)
-    {
-        try {
-            $directories = $this->unserialize($this->getModuleConfig('image_directory/include_directories', $storeId));
-        } catch (Exception $e) {
-            $directories = [];
-            $this->_logger->error($e->getMessage());
-        }
-
-        $result = [];
-        foreach ($directories as $key => $directory) {
-            $result[$key] = $directory['path'];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param null $storeId
-     *
-     * @return mixed
-     */
-    public function getExcludeDirectories($storeId = null)
-    {
-        try {
-            $directories = $this->unserialize($this->getModuleConfig('image_directory/exclude_directories', $storeId));
-        } catch (Exception $e) {
-            $directories = [];
-        }
-
-        $result = [];
-        foreach ($directories as $key => $directory) {
-            $result[$key] = $directory['path'];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $code
-     * @param null $storeId
-     *
-     * @return mixed
-     */
     public function getCronJobConfig($code = '', $storeId = null)
     {
         $code = ($code !== '') ? '/' . $code : '';
 
         return $this->getModuleConfig('cron_job' . $code, $storeId);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function skipTransparentImage()
-    {
-        return $this->getOptimizeOptions('skip_transparent_img');
     }
 
     /**
@@ -246,6 +182,49 @@ class Data extends AbstractData
     }
 
     /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getExcludeDirectories($storeId = null)
+    {
+        try {
+            $directories = $this->unserialize($this->getModuleConfig('image_directory/exclude_directories', $storeId));
+        } catch (Exception $e) {
+            $directories = [];
+        }
+
+        $result = [];
+        foreach ($directories as $key => $directory) {
+            $result[$key] = $directory['path'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param null $storeId
+     *
+     * @return mixed
+     */
+    public function getIncludeDirectories($storeId = null)
+    {
+        try {
+            $directories = $this->unserialize($this->getModuleConfig('image_directory/include_directories', $storeId));
+        } catch (Exception $e) {
+            $directories = [];
+            $this->_logger->error($e->getMessage());
+        }
+
+        $result = [];
+        foreach ($directories as $key => $directory) {
+            $result[$key] = $directory['path'];
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $directory
      *
      * @return bool
@@ -268,6 +247,16 @@ class Data extends AbstractData
     }
 
     /**
+     * @param $path
+     *
+     * @return mixed
+     */
+    public function getPathInfo($path)
+    {
+        return $this->ioFile->getPathInfo($path);
+    }
+
+    /**
      * @param $file
      *
      * @return bool
@@ -281,17 +270,25 @@ class Data extends AbstractData
             && imagecolortransparent(imagecreatefrompng($file)) >= 0;
     }
 
+    /**
+     * @return mixed
+     */
+    public function skipTransparentImage()
+    {
+        return $this->getOptimizeOptions('skip_transparent_img');
+    }
 
     /**
-     * Build end point api
+     * @param string $code
+     * @param null $storeId
      *
-     * @return string
+     * @return mixed
      */
-    public function buildEndpointUrl()
+    public function getOptimizeOptions($code = '', $storeId = null)
     {
-        $endpoint = 'http://api.resmush.it/';
+        $code = ($code !== '') ? '/' . $code : '';
 
-        return $endpoint . '/?qlty=' . $this->getQuality();
+        return $this->getModuleConfig('optimize_options' . $code, $storeId);
     }
 
     /**
@@ -343,18 +340,23 @@ class Data extends AbstractData
     /**
      * @param $path
      *
-     * @return array
+     * @return bool
      */
-    public function getParams($path)
+    public function fileExists($path)
     {
-        $mime   = mime_content_type($path);
-        $info   = $this->getPathInfo($path);
-        $name   = $info['basename'];
-        $output = new CURLFile($path, $mime, $name);
+        return $this->ioFile->fileExists($path);
+    }
 
-        return [
-            'files' => $output
-        ];
+    /**
+     * Build end point api
+     *
+     * @return string
+     */
+    public function buildEndpointUrl()
+    {
+        $endpoint = 'http://api.resmush.it/';
+
+        return $endpoint . '/?qlty=' . $this->getQuality();
     }
 
     /**
@@ -371,6 +373,23 @@ class Data extends AbstractData
     }
 
     /**
+     * @param $path
+     *
+     * @return array
+     */
+    public function getParams($path)
+    {
+        $mime   = mime_content_type($path);
+        $info   = $this->getPathInfo($path);
+        $name   = $info['basename'];
+        $output = new CURLFile($path, $mime, $name);
+
+        return [
+            'files' => $output
+        ];
+    }
+
+    /**
      * @param $url
      * @param $path
      *
@@ -380,7 +399,7 @@ class Data extends AbstractData
     public function saveImage($url, $path)
     {
         if ($this->getConfigGeneral('backup_image')) {
-            $this->processImage($path, true);
+            $this->processImage($path);
         }
         if ($this->getOptimizeOptions('force_permission')) {
             $this->driverFile->deleteFile($path);
@@ -392,26 +411,6 @@ class Data extends AbstractData
         } else {
             $this->ioFile->read($url, $path);
         }
-    }
-
-    /**
-     * @param $path
-     *
-     * @return bool
-     */
-    public function fileExists($path)
-    {
-        return $this->ioFile->fileExists($path);
-    }
-
-    /**
-     * @param $path
-     *
-     * @return mixed
-     */
-    public function getPathInfo($path)
-    {
-        return $this->ioFile->getPathInfo($path);
     }
 
     /**

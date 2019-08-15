@@ -36,7 +36,7 @@ class Directories extends AbstractFieldArray
     {
         $this->addColumn('path', ['label' => __('Path'), 'renderer' => false, 'class' => 'required-entry']);
 
-        $this->_addAfter = false;
+        $this->_addAfter       = false;
         $this->_addButtonLabel = __('Add');
     }
 }

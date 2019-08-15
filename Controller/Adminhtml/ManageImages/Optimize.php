@@ -28,8 +28,6 @@ use Magento\Framework\Controller\ResultInterface;
 use Mageplaza\ImageOptimizer\Controller\Adminhtml\Image;
 use Mageplaza\ImageOptimizer\Helper\Data;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
-use Mageplaza\ImageOptimizer\Model\ImageFactory;
-use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
 
 /**
  * Class Optimize

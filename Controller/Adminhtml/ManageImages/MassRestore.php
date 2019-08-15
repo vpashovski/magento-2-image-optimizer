@@ -56,7 +56,7 @@ class MassRestore extends Image
 
             return $resultRedirect->setPath('*/*/');
         }
-        $updated    = 0;
+        $updated = 0;
         foreach ($collection as $image) {
             try {
                 $this->helperData->processImage($image->getData('path'), false);

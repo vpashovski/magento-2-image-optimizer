@@ -56,7 +56,7 @@ class MassSkip extends Image
 
             return $resultRedirect->setPath('*/*/');
         }
-        $updated    = 0;
+        $updated = 0;
         foreach ($collection as $image) {
             try {
                 $image->setStatus(Status::SKIPPED)->save();

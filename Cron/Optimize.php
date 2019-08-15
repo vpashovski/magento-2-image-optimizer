@@ -21,12 +21,12 @@
 
 namespace Mageplaza\ImageOptimizer\Cron;
 
+use Exception;
 use Mageplaza\ImageOptimizer\Helper\Data;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\Collection as ImageOptimizerCollection;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image\CollectionFactory;
-use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -71,10 +71,10 @@ class Optimize
         CollectionFactory $collectionFactory,
         LoggerInterface $logger
     ) {
-        $this->helperData = $helperData;
-        $this->resourceModel = $resourceModel;
+        $this->helperData        = $helperData;
+        $this->resourceModel     = $resourceModel;
         $this->collectionFactory = $collectionFactory;
-        $this->logger = $logger;
+        $this->logger            = $logger;
     }
 
     /**

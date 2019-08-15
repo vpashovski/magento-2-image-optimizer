@@ -75,25 +75,31 @@ class ProgressBar extends Template
     /**
      * @return Collection
      */
-    public function getImageCollection()
-    {
-        return $this->collectionFactory->create();
-    }
-
-    /**
-     * @return Collection
-     */
     public function getImagePendingCollection()
     {
         return $this->getImageCollection()->addFieldToFilter('status', Status::PENDING);
     }
 
     /**
-     * @return int
+     * @return Collection
      */
-    public function getTotalImage()
+    public function getImageCollection()
     {
-        return $this->getImageCollection()->getSize();
+        return $this->collectionFactory->create();
+    }
+
+    /**
+     * @param $status
+     *
+     * @return string
+     */
+    public function getBarContent($status)
+    {
+        if ($this->getTotalByStatus($status) === 0) {
+            return '';
+        }
+
+        return $this->getWidthByStatus($status) . ' ' . __($status) . ' (' . $this->getTotalByStatus($status) . '/' . $this->getTotalImage() . ')';
     }
 
     /**
@@ -125,17 +131,11 @@ class ProgressBar extends Template
     }
 
     /**
-     * @param $status
-     *
-     * @return string
+     * @return int
      */
-    public function getBarContent($status)
+    public function getTotalImage()
     {
-        if ($this->getTotalByStatus($status) === 0) {
-            return '';
-        }
-
-        return $this->getWidthByStatus($status) . ' ' . __($status) . ' (' . $this->getTotalByStatus($status) . '/' . $this->getTotalImage() . ')';
+        return $this->getImageCollection()->getSize();
     }
 
     /**

@@ -44,19 +44,19 @@ class Image extends AbstractModel implements IdentityInterface
     protected $_eventPrefix = 'mageplaza_image_optimizer';
 
     /**
+     * @return array
+     */
+    public function getIdentities()
+    {
+        return [self::CACHE_TAG . '_' . $this->getId()];
+    }
+
+    /**
      * Constructor
      */
     protected function _construct()
     {
         parent::_construct();
         $this->_init(ImageResourceModel::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
     }
 }

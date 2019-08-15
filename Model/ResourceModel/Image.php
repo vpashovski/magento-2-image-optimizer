@@ -31,17 +31,10 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 class Image extends AbstractDb
 {
     /**
-     * Constructor
-     */
-    protected function _construct()
-    {
-        $this->_init('mageplaza_image_optimizer', 'image_id');
-    }
-
-    /**
      * Insert image data
      *
      * @param array $data
+     *
      * @return void
      */
     public function insertImagesData($data)
@@ -58,5 +51,13 @@ class Image extends AbstractDb
             $connection->rollBack();
             $this->_logger->error($e->getMessage());
         }
+    }
+
+    /**
+     * Constructor
+     */
+    protected function _construct()
+    {
+        $this->_init('mageplaza_image_optimizer', 'image_id');
     }
 }

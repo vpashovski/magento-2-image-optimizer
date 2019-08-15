@@ -62,17 +62,6 @@ class Optimize extends Command
     protected $logger;
 
     /**
-     * @inheritDoc
-     */
-    protected function configure()
-    {
-        $this->setName('mpimageoptimizer:optimize');
-        $this->setDescription('Image Optimizer console command.');
-
-        parent::configure();
-    }
-
-    /**
      * Optimize constructor.
      *
      * @param CollectionFactory $collectionFactory
@@ -112,7 +101,7 @@ class Optimize extends Command
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('status', Status::PENDING);
         $limit = $this->helperData->getCronJobConfig('limit_number');
-        $size = $collection->getSize();
+        $size  = $collection->getSize();
         if ($limit < $size) {
             $collection->setPageSize($limit);
         } else {
@@ -133,17 +122,38 @@ class Optimize extends Command
                 $count++;
                 $percent = round(($count / $limit) * 100, 2) . '%';
                 if (isset($result['error'])) {
-                    $output->writeln(__('<error>The problem occurred during image optimization %1.</error>', $image->getData('path')));
+                    $output->writeln(
+                        __('<error>The problem occurred during image optimization %1.</error>', $image->getData('path'))
+                    );
                     $this->logger->critical($result['error_long']);
                 } else {
-                    $output->writeln(__('<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>', $image->getData('path'), $count, $limit, $percent));
+                    $output->writeln(__(
+                        '<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>',
+                        $image->getData('path'),
+                        $count,
+                        $limit,
+                        $percent
+                    ));
                 }
             } catch (Exception $e) {
-                $output->writeln(__('<error>The problem occurred during image optimization %1.</error>', $image->getData('path')));
+                $output->writeln(
+                    __('<error>The problem occurred during image optimization %1.</error>', $image->getData('path'))
+                );
                 $this->logger->critical($e->getMessage());
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function configure()
+    {
+        $this->setName('mpimageoptimizer:optimize');
+        $this->setDescription('Image Optimizer console command.');
+
+        parent::configure();
     }
 }
