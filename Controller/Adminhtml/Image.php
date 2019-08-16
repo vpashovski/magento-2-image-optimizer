@@ -24,6 +24,7 @@ namespace Mageplaza\ImageOptimizer\Controller\Adminhtml;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\ForwardFactory;
+use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Ui\Component\MassAction\Filter;
@@ -138,5 +139,17 @@ abstract class Image extends Action
             ->addBreadcrumb(__('Manage Images'), __('Manage Images'));
 
         return $resultPage;
+    }
+
+    /**
+     * @param Redirect $resultRedirect
+     *
+     * @return Redirect
+     */
+    protected function isDisable($resultRedirect)
+    {
+        $this->messageManager->addErrorMessage(__('The module has been disabled.'));
+
+        return $resultRedirect->setPath('*/*/');
     }
 }

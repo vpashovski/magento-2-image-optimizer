@@ -42,9 +42,7 @@ class Restore extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
-
-            return $resultRedirect->setPath('*/*/');
+            $this->isDisable($resultRedirect);
         }
 
         if (!$this->helperData->getConfigGeneral('backup_image')) {
@@ -52,28 +50,32 @@ class Restore extends Image
 
             return $resultRedirect->setPath('*/*/');
         }
+        /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
+        $model = $this->imageFactory->create();
+        $imageId = $this->getRequest()->getParam('image_id');
+        try {
+            if ($imageId) {
+                $this->resourceModel->load($model, $imageId);
+                if ($imageId !== $model->getId()) {
+                    $this->messageManager->addErrorMessage(__('The wrong image is specified.'));
 
-        $id = $this->getRequest()->getParam('image_id');
-        if ($id) {
-            try {
-                /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-                $model = $this->imageFactory->create();
-                $this->resourceModel->load($model, $id);
-                $this->helperData->processImage($model->getData('path'), false);
-                $model->addData([
-                    'status'        => Status::SKIPPED,
-                    'optimize_size' => '',
-                    'percent'       => '',
-                    'message'       => ''
-                ]);
-                $this->resourceModel->save($model);
-                $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
-            } catch (Exception $e) {
-                $this->messageManager->addErrorMessage(
-                    __('Something went wrong while restore for %1.', $model->getData('path'))
-                );
-                $this->logger->critical($e->getMessage());
+                    return $resultRedirect->setPath('*/*/');
+                }
             }
+            $this->helperData->processImage($model->getData('path'), false);
+            $model->addData([
+                'status'        => Status::SKIPPED,
+                'optimize_size' => '',
+                'percent'       => '',
+                'message'       => ''
+            ]);
+            $this->resourceModel->save($model);
+            $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage(
+                __('Something went wrong while restore for %1.', $model->getData('path'))
+            );
+            $this->logger->critical($e->getMessage());
         }
 
         return $resultRedirect->setPath('*/*/');

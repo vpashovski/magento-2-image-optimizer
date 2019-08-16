@@ -40,9 +40,7 @@ class Scan extends Image
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
-
-            return $resultRedirect->setPath('*/*/');
+            $this->isDisable($resultRedirect);
         }
 
         try {

@@ -89,13 +89,15 @@ class Optimize extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return $this|int|null
+     * @return int|void|null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
-            return $this;
+            $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
+            return;
         }
+
         $count = 0;
         /** @var ImageOptimizerCollection $collection */
         $collection = $this->collectionFactory->create();
@@ -142,8 +144,6 @@ class Optimize extends Command
                 $this->logger->critical($e->getMessage());
             }
         }
-
-        return $this;
     }
 
     /**

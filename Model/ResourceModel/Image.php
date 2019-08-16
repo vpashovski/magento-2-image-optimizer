@@ -33,9 +33,7 @@ class Image extends AbstractDb
     /**
      * Insert image data
      *
-     * @param array $data
-     *
-     * @return void
+     * @param $data
      */
     public function insertImagesData($data)
     {

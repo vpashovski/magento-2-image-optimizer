@@ -64,7 +64,7 @@ class Schedule extends Value
     protected $messageManager;
 
     /**
-     * Frequency constructor.
+     * Schedule constructor.
      *
      * @param Context $context
      * @param Registry $registry
@@ -106,7 +106,6 @@ class Schedule extends Value
 
     /**
      * @return Value
-     * @throws Exception
      */
     public function afterSave()
     {

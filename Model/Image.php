@@ -44,7 +44,7 @@ class Image extends AbstractModel implements IdentityInterface
     protected $_eventPrefix = 'mageplaza_image_optimizer';
 
     /**
-     * @return array
+     * @return array|string[]
      */
     public function getIdentities()
     {

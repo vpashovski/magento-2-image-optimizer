@@ -42,24 +42,27 @@ class Skip extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
-
-            return $resultRedirect->setPath('*/*/');
+            $this->isDisable($resultRedirect);
         }
 
-        $id = $this->getRequest()->getParam('image_id');
-        if ($id) {
-            try {
-                /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-                $model = $this->imageFactory->create();
-                $this->resourceModel->load($model, $id);
-                $model->setData('status', Status::SKIPPED);
-                $this->resourceModel->save($model);
-                $this->messageManager->addSuccessMessage(__('The image has been successfully updated.'));
-            } catch (Exception $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
-                $this->logger->critical($e->getMessage());
+        /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
+        $model = $this->imageFactory->create();
+        $imageId = $this->getRequest()->getParam('image_id');
+        try {
+            if ($imageId) {
+                $this->resourceModel->load($model, $imageId);
+                if ($imageId !== $model->getId()) {
+                    $this->messageManager->addErrorMessage(__('The wrong image is specified.'));
+
+                    return $resultRedirect->setPath('*/*/');
+                }
             }
+            $model->setData('status', Status::SKIPPED);
+            $this->resourceModel->save($model);
+            $this->messageManager->addSuccessMessage(__('The image has been successfully updated.'));
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->logger->critical($e->getMessage());
         }
 
         return $resultRedirect->setPath('*/*/');

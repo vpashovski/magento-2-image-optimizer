@@ -75,12 +75,13 @@ class Scan extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return $this|int|null
+     * @return int|void|null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
-            return $this;
+            $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
+            return;
         }
 
         try {
@@ -88,7 +89,7 @@ class Scan extends Command
             if (empty($data)) {
                 $output->writeln(__('<info>Sorry, no images are found after scan.</info>'));
 
-                return $this;
+                return;
             }
             $this->resourceModel->insertImagesData($data);
             $output->writeln(__('<info>Successful data scanning.</info>'));
@@ -96,8 +97,6 @@ class Scan extends Command
             $output->writeln(__('<error>Something went wrong while scan images. Please review the error log.</error>'));
             $this->logger->critical($e->getMessage());
         }
-
-        return $this;
     }
 
     /**

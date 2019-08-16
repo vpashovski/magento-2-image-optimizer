@@ -41,23 +41,26 @@ class Delete extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
-
-            return $resultRedirect->setPath('*/*/');
+            $this->isDisable($resultRedirect);
         }
 
-        $id = $this->getRequest()->getParam('image_id');
-        if ($id) {
-            /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-            $model = $this->imageFactory->create();
-            try {
-                $this->resourceModel->load($model, $id);
-                $this->resourceModel->delete($model);
-                $this->messageManager->addSuccessMessage(__('You deleted the image.'));
-            } catch (Exception $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
-                $this->logger->critical($e->getMessage());
+        /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
+        $model = $this->imageFactory->create();
+        $imageId = $this->getRequest()->getParam('image_id');
+        try {
+            if ($imageId) {
+                $this->resourceModel->load($model, $imageId);
+                if ($imageId !== $model->getId()) {
+                    $this->messageManager->addErrorMessage(__('The wrong image is specified.'));
+
+                    return $resultRedirect->setPath('*/*/');
+                }
             }
+            $this->resourceModel->delete($model);
+            $this->messageManager->addSuccessMessage(__('You deleted the image.'));
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+            $this->logger->critical($e->getMessage());
         }
 
         return $resultRedirect->setPath('*/*/');

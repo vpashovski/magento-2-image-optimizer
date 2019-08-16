@@ -42,9 +42,7 @@ class Optimize extends Image
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled() && !$this->getRequest()->getParam('isAjax')) {
-            $this->messageManager->addErrorMessage(__('The module has been disabled.'));
-
-            return $resultRedirect->setPath('*/*/');
+            $this->isDisable($resultRedirect);
         }
 
         $imageId = $this->getRequest()->getParam('image_id');
