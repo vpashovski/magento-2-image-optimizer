@@ -31,8 +31,7 @@ define([
         options: {
             index: 0,
             isStop: false,
-            confirmMessage: $.mage.__('Too many images will take a long time to optimize.' +
-                ' Are you sure you want to optimize all images?')
+            confirmMessage: $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize all images?')
         },
 
         _create: function () {

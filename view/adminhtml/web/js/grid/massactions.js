@@ -31,9 +31,7 @@ define([
             var selectedImages = this.getSelections().selected,
                 collection     = {items: []},
                 total          = this.getSelections().total,
-                confirmMessage = $.mage.__('Too many images will take a long time to optimize.'
-                    + ' Are you sure you want to optimize the selected image(s)?')
-                    + ' (' + total + ' record' + (total > 1 ? 's' : '') + ')';
+                confirmMessage = $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize the selected image(s)? (%1 record(s))').replace('%1', total);
 
             $.each(selectedImages, function (index, value) {
                 collection.items[index] = {image_id: value};

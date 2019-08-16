@@ -22,6 +22,7 @@
 namespace Mageplaza\ImageOptimizer\Console\Command;
 
 use Exception;
+use Magento\Framework\Console\Cli;
 use Mageplaza\ImageOptimizer\Helper\Data;
 use Mageplaza\ImageOptimizer\Model\Config\Source\Status;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
@@ -89,13 +90,14 @@ class Optimize extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
+     * @return int|null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
             $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
-            return;
+
+            return Cli::RETURN_FAILURE;
         }
 
         $count = 0;
@@ -144,6 +146,8 @@ class Optimize extends Command
                 $this->logger->critical($e->getMessage());
             }
         }
+
+        return Cli::RETURN_SUCCESS;
     }
 
     /**

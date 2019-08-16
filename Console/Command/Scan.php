@@ -22,6 +22,7 @@
 namespace Mageplaza\ImageOptimizer\Console\Command;
 
 use Exception;
+use Magento\Framework\Console\Cli;
 use Mageplaza\ImageOptimizer\Helper\Data;
 use Mageplaza\ImageOptimizer\Model\ResourceModel\Image as ResourceImage;
 use Psr\Log\LoggerInterface;
@@ -75,13 +76,14 @@ class Scan extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
+     * @return int|null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
             $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
-            return;
+
+            return Cli::RETURN_FAILURE;
         }
 
         try {
@@ -89,13 +91,17 @@ class Scan extends Command
             if (empty($data)) {
                 $output->writeln(__('<info>Sorry, no images are found after scan.</info>'));
 
-                return;
+                return Cli::RETURN_FAILURE;
             }
             $this->resourceModel->insertImagesData($data);
             $output->writeln(__('<info>Successful data scanning.</info>'));
+
+            return Cli::RETURN_SUCCESS;
         } catch (Exception  $e) {
             $output->writeln(__('<error>Something went wrong while scan images. Please review the error log.</error>'));
             $this->logger->critical($e->getMessage());
+
+            return Cli::RETURN_FAILURE;
         }
     }
 

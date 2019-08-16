@@ -47,7 +47,6 @@ class Image extends AbstractDb
             $connection->commit();
         } catch (Exception $e) {
             $connection->rollBack();
-            $this->_logger->error($e->getMessage());
         }
     }
 

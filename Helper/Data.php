@@ -380,13 +380,15 @@ class Data extends AbstractData
      * @param $url
      * @param $path
      *
-     * @throws FileSystemException
      * @throws LocalizedException
      */
     public function saveImage($url, $path)
     {
         if ($this->getConfigGeneral('backup_image')) {
             $this->processImage($path);
+        }
+        if (!$this->ioFile->isWriteable($path)) {
+            throw new LocalizedException(__('The file %1 does not have write permissions', $path));
         }
         if ($this->getOptimizeOptions('force_permission')) {
             $this->driverFile->deleteFile($path);
@@ -396,7 +398,10 @@ class Data extends AbstractData
                 octdec($this->getOptimizeOptions('select_permission'))
             );
         } else {
-            $this->ioFile->read($url, $path);
+            $this->ioFile->write(
+                $path,
+                $this->ioFile->read($url)
+            );
         }
     }
 
@@ -414,12 +419,12 @@ class Data extends AbstractData
             $pathInfo = $this->getPathInfo($path);
             $folder   = 'var/backup_image/' . $pathInfo['dirname'];
             try {
-                $this->ioFile->checkAndCreateFolder($folder);
+                $this->ioFile->checkAndCreateFolder($folder, 0770);
             } catch (Exception $e) {
                 $this->_logger->critical($e->getMessage());
             }
             if (!$this->fileExists('var/backup_image/' . $path)) {
-                $this->ioFile->write('var/backup_image/' . $path, $path, 0777);
+                $this->ioFile->write('var/backup_image/' . $path, $path, 0770);
             }
         } else {
             if (!$this->fileExists('var/backup_image/' . $path)) {
