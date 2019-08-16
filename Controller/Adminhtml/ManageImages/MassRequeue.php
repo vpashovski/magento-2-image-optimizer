@@ -44,7 +44,7 @@ class MassRequeue extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if (!$this->helperData->isEnabled()) {
-            $this->isDisable($resultRedirect);
+            return $this->isDisable($resultRedirect);
         }
 
         try {

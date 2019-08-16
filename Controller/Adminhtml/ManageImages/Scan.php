@@ -40,7 +40,7 @@ class Scan extends Image
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->isDisable($resultRedirect);
+            return $this->isDisable($resultRedirect);
         }
 
         try {

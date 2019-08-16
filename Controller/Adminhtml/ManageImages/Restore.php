@@ -42,7 +42,7 @@ class Restore extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->isDisable($resultRedirect);
+            return $this->isDisable($resultRedirect);
         }
 
         if (!$this->helperData->getConfigGeneral('backup_image')) {

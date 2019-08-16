@@ -41,7 +41,7 @@ class Delete extends Image
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if (!$this->helperData->isEnabled()) {
-            $this->isDisable($resultRedirect);
+            return $this->isDisable($resultRedirect);
         }
 
         /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
