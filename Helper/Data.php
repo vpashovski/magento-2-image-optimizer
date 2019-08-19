@@ -437,4 +437,13 @@ class Data extends AbstractData
             $this->ioFile->write($path, 'var/backup_image/' . $path);
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function createHtaccessFile()
+    {
+        $this->ioFile->checkAndCreateFolder('var/backup_image', 0770);
+        $this->ioFile->cp('pub/media/.htaccess', 'var/backup_image/.htaccess');
+    }
 }

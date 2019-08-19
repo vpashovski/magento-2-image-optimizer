@@ -21,6 +21,7 @@
 
 namespace Mageplaza\ImageOptimizer\Setup;
 
+use Exception;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -55,6 +56,7 @@ class InstallSchema implements InstallSchemaInterface
      * @param ModuleContextInterface $context
      *
      * @throws Zend_Db_Exception
+     * @throws Exception
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -82,5 +84,7 @@ class InstallSchema implements InstallSchemaInterface
         }
 
         $installer->endSetup();
+
+        $this->helperData->createHtaccessFile();
     }
 }
