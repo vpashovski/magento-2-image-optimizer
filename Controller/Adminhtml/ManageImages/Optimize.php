@@ -83,10 +83,10 @@ class Optimize extends Image
             }
             $result = $this->helperData->optimizeImage($model->getData('path'));
             $data   = [
-                'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
-                'percent'       => isset($result['error']) ? '' : $result['percent'],
+                'optimize_size' => isset($result['error']) ? null : $result['dest_size'],
+                'percent'       => isset($result['error']) ? null : $result['percent'],
                 'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,
-                'message'       => isset($result['error']) ? $result['error_long'] : ''
+                'message'       => isset($result['error_long']) ? $result['error_long'] : ''
             ];
             $model->addData($data);
             $this->resourceModel->save($model);

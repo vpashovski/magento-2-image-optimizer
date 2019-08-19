@@ -312,12 +312,17 @@ class Data extends AbstractData
         }
         $curl->close();
 
-        if (isset($result['dest'])) {
-            try {
-                $this->saveImage($result['dest'], $path);
-            } catch (Exception $e) {
+        if (isset($result['dest'], $result['percent'])) {
+            if ($result['percent'] > 0) {
+                try {
+                    $this->saveImage($result['dest'], $path);
+                } catch (Exception $e) {
+                    $result['error']      = true;
+                    $result['error_long'] = $e->getMessage();
+                }
+            } else {
                 $result['error']      = true;
-                $result['error_long'] = $e->getMessage();
+                $result['error_long'] = __('The image cannot be compressed more. Please reduce the image quality to continue optimizing.');
             }
         }
 
