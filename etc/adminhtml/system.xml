@@ -62,7 +62,7 @@
                         <field id="image_quality">custom</field>
                     </depends>
                 </field>
-                <field id="skip_transparent_img" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="skip_transparent_img" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Skip Transparent Images</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
@@ -85,7 +85,7 @@
             </group>
             <group id="image_directory" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Scan Directory</label>
-                <field id="include_directories" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="include_directories" translate="label comment" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Included Directories</label>
                     <frontend_model>Mageplaza\ImageOptimizer\Block\Adminhtml\Config\Field\Directories</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
@@ -114,7 +114,7 @@
                         <field id="enabled_scan">1</field>
                     </depends>
                 </field>
-                <field id="enabled_optimize" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="enabled_optimize" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

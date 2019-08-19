@@ -37,9 +37,6 @@ class Image extends AbstractDb
      */
     public function insertImagesData($data)
     {
-        if (empty($data)) {
-            return;
-        }
         $connection = $this->getConnection();
         $connection->beginTransaction();
         try {

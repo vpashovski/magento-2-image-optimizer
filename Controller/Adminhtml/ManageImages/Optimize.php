@@ -54,15 +54,15 @@ class Optimize extends Image
             if ($imageId) {
                 $this->resourceModel->load($model, $imageId);
                 if ($imageId !== $model->getId()) {
-                    return $this->checkStatus(Status::ERROR, $model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect);
                 }
                 $status = $model->getData('status');
                 if ($status === Status::SUCCESS) {
-                    return $this->checkStatus($status, $model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect);
                 }
 
                 if ($status === Status::SKIPPED) {
-                    return $this->checkStatus($status, $model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect);
                 }
             }
             $result = $this->helperData->optimizeImage($model->getData('path'));
@@ -113,14 +113,14 @@ class Optimize extends Image
     }
 
     /**
-     * @param string $status
      * @param \Mageplaza\ImageOptimizer\Model\Image $model
      * @param Redirect $resultRedirect
      *
      * @return mixed
      */
-    protected function checkStatus($status, $model, $resultRedirect)
+    protected function checkStatus($model, $resultRedirect)
     {
+        $status = $model->getData('status');
         if ($status === Status::SUCCESS) {
             if ($this->getRequest()->getParam('isAjax')) {
                 return $this->getResponse()->representJson(Data::jsonEncode([

@@ -23,7 +23,6 @@ namespace Mageplaza\ImageOptimizer\Controller\Adminhtml;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Backend\Model\View\Result\ForwardFactory;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
@@ -46,11 +45,6 @@ abstract class Image extends Action
      * @see _isAllowed()
      */
     const ADMIN_RESOURCE = 'Mageplaza_ImageOptimizer::grid';
-
-    /**
-     * @var ForwardFactory
-     */
-    protected $resultForwardFactory;
 
     /**
      * @var PageFactory
@@ -95,7 +89,6 @@ abstract class Image extends Action
      * Image constructor.
      *
      * @param Context $context
-     * @param ForwardFactory $resultForwardFactory
      * @param PageFactory $resultPageFactory
      * @param ImageFactory $imageFactory
      * @param ResourceImage $resourceModel
@@ -106,7 +99,6 @@ abstract class Image extends Action
      */
     public function __construct(
         Context $context,
-        ForwardFactory $resultForwardFactory,
         PageFactory $resultPageFactory,
         ImageFactory $imageFactory,
         ResourceImage $resourceModel,
@@ -115,14 +107,13 @@ abstract class Image extends Action
         Data $helperData,
         LoggerInterface $logger
     ) {
-        $this->resultForwardFactory = $resultForwardFactory;
-        $this->resultPageFactory    = $resultPageFactory;
-        $this->imageFactory         = $imageFactory;
-        $this->resourceModel        = $resourceModel;
-        $this->collectionFactory    = $collectionFactory;
-        $this->filter               = $filter;
-        $this->helperData           = $helperData;
-        $this->logger               = $logger;
+        $this->resultPageFactory = $resultPageFactory;
+        $this->imageFactory      = $imageFactory;
+        $this->resourceModel     = $resourceModel;
+        $this->collectionFactory = $collectionFactory;
+        $this->filter            = $filter;
+        $this->helperData        = $helperData;
+        $this->logger            = $logger;
 
         parent::__construct($context);
     }
