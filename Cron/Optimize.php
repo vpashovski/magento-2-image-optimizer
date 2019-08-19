@@ -98,7 +98,7 @@ class Optimize
                     'optimize_size' => isset($result['error']) ? null : $result['dest_size'],
                     'percent'       => isset($result['error']) ? null : $result['percent'],
                     'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,
-                    'message'       => isset($result['error']) ? $result['error_long'] : ''
+                    'message'       => isset($result['error_long']) ? $result['error_long'] : ''
                 ];
                 $image->addData($data);
                 $this->resourceModel->save($image);
