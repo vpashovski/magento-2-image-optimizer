@@ -116,8 +116,8 @@ class Optimize extends Command
             try {
                 $result = $this->helperData->optimizeImage($image->getData('path'));
                 $data   = [
-                    'optimize_size' => isset($result['error']) ? '' : $result['dest_size'],
-                    'percent'       => isset($result['error']) ? '' : $result['percent'],
+                    'optimize_size' => isset($result['error']) ? null : $result['dest_size'],
+                    'percent'       => isset($result['error']) ? null : $result['percent'],
                     'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,
                     'message'       => isset($result['error']) ? $result['error_long'] : ''
                 ];

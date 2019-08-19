@@ -65,8 +65,8 @@ class Restore extends Image
             $this->helperData->processImage($model->getData('path'), false);
             $model->addData([
                 'status'        => Status::SKIPPED,
-                'optimize_size' => '',
-                'percent'       => '',
+                'optimize_size' => null,
+                'percent'       => null,
                 'message'       => ''
             ]);
             $this->resourceModel->save($model);

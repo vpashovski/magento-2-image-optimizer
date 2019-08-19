@@ -60,8 +60,8 @@ class MassRestore extends Image
                 $this->helperData->processImage($image->getData('path'), false);
                 $image->addData([
                     'status'        => Status::SKIPPED,
-                    'optimize_size' => '',
-                    'percent'       => '',
+                    'optimize_size' => null,
+                    'percent'       => null,
                     'message'       => ''
                 ]);
                 $image->save();
