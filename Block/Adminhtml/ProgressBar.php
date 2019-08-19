@@ -99,7 +99,9 @@ class ProgressBar extends Template
             return '';
         }
 
-        return $this->getWidthByStatus($status) . ' ' . __($status) . ' (' . $this->getTotalByStatus($status) . '/' . $this->getTotalImage() . ')';
+        return $this->getWidthByStatus($status) . ' '
+            . $status . ' (' . $this->getTotalByStatus($status)
+            . '/' . $this->getTotalImage() . ')';
     }
 
     /**
