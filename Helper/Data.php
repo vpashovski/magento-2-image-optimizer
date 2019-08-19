@@ -321,7 +321,6 @@ class Data extends AbstractData
                     $result['error_long'] = $e->getMessage();
                 }
             } else {
-                $result['error']      = true;
                 $result['error_long'] = __('The image cannot be compressed more. Please reduce the image quality to continue optimizing.');
             }
         }

@@ -25,6 +25,7 @@ use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Mageplaza\ImageOptimizer\Helper\Data;
 use Zend_Db_Exception;
 
 /**
@@ -33,6 +34,22 @@ use Zend_Db_Exception;
  */
 class InstallSchema implements InstallSchemaInterface
 {
+    /**
+     * @var Data
+     */
+    protected $helperData;
+
+    /**
+     * InstallSchema constructor.
+     *
+     * @param Data $helperData
+     */
+    public function __construct(
+        Data $helperData
+    ) {
+        $this->helperData = $helperData;
+    }
+
     /**
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
@@ -44,7 +61,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer = $setup;
         $installer->startSetup();
 
-        if (!$installer->tableExists('mageplaza_image_optimizer')) {
+        if (!$installer->tableExists('mageplaza_image_optimizer' && !$this->helperData->versionCompare('2.3.0'))) {
             $table = $installer->getConnection()
                 ->newTable($installer->getTable('mageplaza_image_optimizer'))
                 ->addColumn('image_id', Table::TYPE_INTEGER, null, [
@@ -53,7 +70,7 @@ class InstallSchema implements InstallSchemaInterface
                     'nullable' => false,
                     'primary'  => true
                 ], 'Banner Id')
-                ->addColumn('path', Table::TYPE_TEXT, 255, [], 'Name')
+                ->addColumn('path', Table::TYPE_TEXT, 255, [], 'Image Path')
                 ->addColumn('status', Table::TYPE_TEXT, 255, [], 'Status')
                 ->addColumn('origin_size', Table::TYPE_INTEGER, null, [], 'Original Size')
                 ->addColumn('optimize_size', Table::TYPE_INTEGER, null, [], 'Optimize Size')
