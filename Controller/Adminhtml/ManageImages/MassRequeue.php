@@ -59,7 +59,7 @@ class MassRequeue extends Image
         foreach ($collection as $image) {
             try {
                 $data = [
-                    'status' => Status::PENDING,
+                    'status'  => Status::PENDING,
                     'message' => ''
                 ];
                 $image->addData($data)->save();

@@ -51,7 +51,7 @@ class Restore extends Image
             return $resultRedirect->setPath('*/*/');
         }
         /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-        $model = $this->imageFactory->create();
+        $model   = $this->imageFactory->create();
         $imageId = $this->getRequest()->getParam('image_id');
         try {
             if ($imageId) {
@@ -74,8 +74,8 @@ class Restore extends Image
                 $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
             } else {
                 $model->addData([
-                    'status'        => Status::ERROR,
-                    'message'       => __('The file %1 is not writable', $model->getData('path'))
+                    'status'  => Status::ERROR,
+                    'message' => __('The file %1 is not writable', $model->getData('path'))
                 ]);
                 $this->resourceModel->save($model);
                 $this->messageManager->addErrorMessage(__('The file %1 is not writable', $model->getData('path')));

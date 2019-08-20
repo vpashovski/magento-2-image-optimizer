@@ -46,7 +46,7 @@ class Skip extends Image
         }
 
         /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-        $model = $this->imageFactory->create();
+        $model   = $this->imageFactory->create();
         $imageId = $this->getRequest()->getParam('image_id');
         try {
             if ($imageId) {

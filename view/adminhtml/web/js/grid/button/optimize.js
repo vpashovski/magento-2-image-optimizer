@@ -25,7 +25,7 @@ define([
     'Magento_Ui/js/modal/modal'
 ], function ($, confirmation, alert) {
     "use strict";
-    var btnOptimize = $('#optimize_image'),
+    var btnOptimize      = $('#optimize_image'),
         isStopBtnClicked = false;
 
     $.widget('mageplaza.imageoptimizer', {

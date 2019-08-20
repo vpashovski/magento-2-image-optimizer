@@ -42,6 +42,6 @@ define([
                 collection: collection,
                 confirmMessage: confirmMessage
             }).openConfirmModal();
-        },
+        }
     });
 });

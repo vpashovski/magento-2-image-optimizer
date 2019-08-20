@@ -69,8 +69,8 @@ class MassRestore extends Image
                     $updated++;
                 } else {
                     $image->addData([
-                        'status'        => Status::ERROR,
-                        'message'       => __('The file %1 is not writable', $image->getData('path'))
+                        'status'  => Status::ERROR,
+                        'message' => __('The file %1 is not writable', $image->getData('path'))
                     ]);
                     $image->save();
                 }

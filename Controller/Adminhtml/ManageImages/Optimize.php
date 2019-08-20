@@ -104,7 +104,7 @@ class Optimize extends Image
      */
     protected function saveImage($model, $result)
     {
-        $data   = [
+        $data = [
             'optimize_size' => isset($result['error']) ? $model->getData('optimize_size') : $result['dest_size'],
             'percent'       => isset($result['error']) ? null : $result['percent'],
             'status'        => isset($result['error']) ? Status::ERROR : Status::SUCCESS,

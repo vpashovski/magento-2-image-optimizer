@@ -46,7 +46,7 @@ class Requeue extends Image
         }
 
         /** @var \Mageplaza\ImageOptimizer\Model\Image $model */
-        $model = $this->imageFactory->create();
+        $model   = $this->imageFactory->create();
         $imageId = $this->getRequest()->getParam('image_id');
         try {
             if ($imageId) {
@@ -58,7 +58,7 @@ class Requeue extends Image
                 }
             }
             $data = [
-                'status' => Status::PENDING,
+                'status'  => Status::PENDING,
                 'message' => ''
             ];
             $model->addData($data);
