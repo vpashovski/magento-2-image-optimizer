@@ -166,10 +166,10 @@ class Data extends AbstractData
 
                     if ($this->isTransparentImage($file, $extensionPath)) {
                         $status  = Status::SKIPPED;
-                        $message = __('This image is skipped because it is transparent image.');
+                        $message = __('Skipped because it is a transparent image.');
                     } elseif ($fileSize > 5000000) {
                         $status  = Status::SKIPPED;
-                        $message = __('The image exceeds the maximum allowed file size (> 5MB), so it cannot be optimized.');
+                        $message = __('Uploaded file must be below 5MB.');
                     } else {
                         $status  = Status::PENDING;
                         $message = '';
