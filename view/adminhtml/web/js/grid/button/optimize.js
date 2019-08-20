@@ -79,7 +79,7 @@ define([
 
                         processModal.modal({
                             'type': 'popup',
-                            'title': 'Optimize Image',
+                            'title': $.mage.__('Optimize Image'),
                             'responsive': true,
                             'modalClass': 'mpimageoptimizer-modal-popup',
                             'buttons': [
@@ -129,13 +129,14 @@ define([
                 collection        = this.options.collection.items,
                 contentProcessing = $('.mpimageoptimizer-modal-content-processing'),
                 item              = collection[this.options.index],
-                percent           = 100 * (this.options.index + 1) / collection.length;
+                collectionLength  = collection.length,
+                percent           = 100 * (this.options.index + 1) / collectionLength;
 
             if (this.options.isStop) {
                 return;
             }
 
-            if (this.options.index >= collection.length) {
+            if (this.options.index >= collectionLength) {
                 contentProcessing.text($.mage.__('Image optimization completed'));
                 $('button.action-stop-optimize').hide();
                 $('button.action-close-optimize').show();
@@ -145,7 +146,7 @@ define([
             contentProcessing.text(
                 $.mage.__('Processing... ')
                 + ' (' + (this.options.index + 1)
-                + '/' + this.options.collection.items.length + ')'
+                + '/' + collectionLength + ')'
             );
             this.options.index++;
 
@@ -154,10 +155,10 @@ define([
                 data: {image_id: item.image_id}
             }).done(function (data) {
                 self.getContent(percent, data.path, data.status);
-                self.loadAjax(collection);
+                self.loadAjax();
             }).fail(function (data) {
                 self.getContent(percent, data.path, data.status);
-                self.loadAjax(collection);
+                self.loadAjax();
             });
         },
 

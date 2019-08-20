@@ -140,39 +140,46 @@ class Data extends AbstractData
         $pathValues = $collection->getColumnValues('path');
 
         foreach ($includeDirectories as $directory) {
-            if ($this->checkDirectoryReadable($directory)) {
-                $files = $this->driverFile->readDirectoryRecursively($directory);
-                foreach ($files as $file) {
-                    if (!$this->driverFile->isFile($file)) {
+            if (!$this->checkDirectoryReadable($directory)) {
+                continue;
+            }
+            $files = $this->driverFile->readDirectoryRecursively($directory);
+            foreach ($files as $file) {
+                if (!$this->driverFile->isFile($file)) {
+                    continue;
+                }
+                foreach ($excludeDirectories as $excludeDirectory) {
+                    if (strpos($file, $excludeDirectory) !== false) {
+                        continue 2;
+                    }
+                }
+                $pathInfo      = $this->getPathInfo(strtolower($file));
+                $extensionPath = isset($pathInfo['extension']) ? $pathInfo['extension'] : false;
+                if (!array_key_exists($file, $images)
+                    && !in_array($file, $pathValues, true)
+                    && ($extensionPath && in_array($extensionPath, $includePatterns, true))
+                ) {
+                    $fileSize = $this->driverFile->stat($file)['size'];
+                    if ($fileSize === 0) {
                         continue;
                     }
-                    foreach ($excludeDirectories as $excludeDirectory) {
-                        if (preg_match('[' . $excludeDirectory . ']', $file)) {
-                            continue 2;
-                        }
-                    }
-                    $pathInfo = $this->getPathInfo(strtolower($file));
-                    $extensionPath = isset($pathInfo['extension']) ? $pathInfo['extension'] : false;
-                    if (!array_key_exists($file, $images)
-                        && !in_array($file, $pathValues, true)
-                        && ($extensionPath && in_array($extensionPath, $includePatterns, true))
-                    ) {
-                        $fileSize = $this->driverFile->stat($file)['size'];
-                        if ($fileSize === 0) {
-                            continue;
-                        }
 
-                        if ($this->isTransparentImage($file, $extensionPath)) {
-                            $status = Status::SKIPPED;
-                        } else {
-                            $status = Status::PENDING;
-                        }
-                        $images[$file] = [
-                            'path'        => $file,
-                            'status'      => $status,
-                            'origin_size' => $fileSize
-                        ];
+                    if ($this->isTransparentImage($file, $extensionPath)) {
+                        $status  = Status::SKIPPED;
+                        $message = __('This image is skipped because it is transparent image.');
+                    } elseif ($fileSize > 5000000) {
+                        $status  = Status::SKIPPED;
+                        $message = __('The image exceeds the maximum allowed file size (> 5MB), so it cannot be optimized.');
+                    } else {
+                        $status  = Status::PENDING;
+                        $message = '';
                     }
+                    $images[$file] = [
+                        'path'        => $file,
+                        'status'      => $status,
+                        'origin_size' => $fileSize,
+                        'message'     => $message
+                    ];
                 }
             }
         }
@@ -184,7 +191,7 @@ class Data extends AbstractData
     /**
      * @param null $storeId
      *
-     * @return mixed
+     * @return array
      */
     public function getExcludeDirectories($storeId = null)
     {
