@@ -145,13 +145,8 @@ class Data extends AbstractData
             }
             $files = $this->driverFile->readDirectoryRecursively($directory);
             foreach ($files as $file) {
-                if (!$this->driverFile->isFile($file)) {
+                if (!$this->checkExcludeDirectory($file, $excludeDirectories)) {
                     continue;
-                }
-                foreach ($excludeDirectories as $excludeDirectory) {
-                    if (strpos($file, $excludeDirectory) !== false) {
-                        continue 2;
-                    }
                 }
                 $pathInfo      = $this->getPathInfo(strtolower($file));
                 $extensionPath = isset($pathInfo['extension']) ? $pathInfo['extension'] : false;
@@ -186,6 +181,28 @@ class Data extends AbstractData
         $images = array_values($images);
 
         return $images;
+    }
+
+    /**
+     * @param string $file
+     * @param array $excludeDirectories
+     *
+     * @return bool
+     * @throws FileSystemException
+     */
+    protected function checkExcludeDirectory($file, $excludeDirectories)
+    {
+        if (!$this->driverFile->isFile($file)) {
+            return false;
+        }
+
+        foreach ($excludeDirectories as $excludeDirectory) {
+            if (strpos($file, $excludeDirectory) !== false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
