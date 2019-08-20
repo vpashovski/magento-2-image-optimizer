@@ -322,7 +322,10 @@ class Data extends AbstractData
         if (isset($result['dest'], $result['percent'])) {
             if ($result['percent'] > 0) {
                 try {
-                    $this->saveImage($result['dest'], $path);
+                    if ($this->saveImage($result['dest'], $path) === false) {
+                        $result['error']      = true;
+                        $result['error_long'] = __('The file %1 is not writable', $path);
+                    }
                 } catch (Exception $e) {
                     $result['error']      = true;
                     $result['error_long'] = $e->getMessage();
@@ -391,58 +394,66 @@ class Data extends AbstractData
      * @param $url
      * @param $path
      *
+     * @return bool|int
+     * @throws FileSystemException
      * @throws LocalizedException
      */
     public function saveImage($url, $path)
     {
         if ($this->getConfigGeneral('backup_image')) {
-            $this->processImage($path);
-        }
-        if (!$this->ioFile->isWriteable($path)) {
-            throw new LocalizedException(__('The file %1 does not have write permissions', $path));
+            $this->backupImage($path);
         }
         if ($this->getOptimizeOptions('force_permission')) {
             $this->driverFile->deleteFile($path);
-            $this->ioFile->write(
+            $result = $this->ioFile->write(
                 $path,
                 $this->ioFile->read($url),
                 octdec($this->getOptimizeOptions('select_permission'))
             );
         } else {
-            $this->ioFile->write(
+            $result = $this->ioFile->write(
                 $path,
                 $this->ioFile->read($url)
             );
         }
+
+        return $result;
     }
 
     /**
-     * Handle image backup / rollback process
+     * Handle image backup process
      *
      * @param $path
-     * @param bool $backup
+     */
+    public function backupImage($path)
+    {
+        $pathInfo = $this->getPathInfo($path);
+        $folder   = 'var/backup_image/' . $pathInfo['dirname'];
+        try {
+            $this->ioFile->checkAndCreateFolder($folder, 0775);
+        } catch (Exception $e) {
+            $this->_logger->critical($e->getMessage());
+        }
+        if (!$this->fileExists('var/backup_image/' . $path)) {
+            $this->ioFile->write('var/backup_image/' . $path, $path, 0664);
+        }
+    }
+
+    /**
+     * Handle image rollback process
      *
+     * @param $path
+     *
+     * @return bool|int
      * @throws LocalizedException
      */
-    public function processImage($path, $backup = true)
+    public function restoreImage($path)
     {
-        if ($backup) {
-            $pathInfo = $this->getPathInfo($path);
-            $folder   = 'var/backup_image/' . $pathInfo['dirname'];
-            try {
-                $this->ioFile->checkAndCreateFolder($folder, 0770);
-            } catch (Exception $e) {
-                $this->_logger->critical($e->getMessage());
-            }
-            if (!$this->fileExists('var/backup_image/' . $path)) {
-                $this->ioFile->write('var/backup_image/' . $path, $path, 0770);
-            }
-        } else {
-            if (!$this->fileExists('var/backup_image/' . $path)) {
-                throw new LocalizedException(__('Image %1 has not been backed up.', $path));
-            }
-            $this->ioFile->write($path, 'var/backup_image/' . $path);
+        if (!$this->fileExists('var/backup_image/' . $path)) {
+            throw new LocalizedException(__('Image %1 has not been backed up.', $path));
         }
+
+        return $this->ioFile->write($path, 'var/backup_image/' . $path);
     }
 
     /**
@@ -450,7 +461,7 @@ class Data extends AbstractData
      */
     public function createHtaccessFile()
     {
-        $this->ioFile->checkAndCreateFolder('var/backup_image', 0770);
+        $this->ioFile->checkAndCreateFolder('var/backup_image', 0664);
         $this->ioFile->cp('pub/media/.htaccess', 'var/backup_image/.htaccess');
     }
 }

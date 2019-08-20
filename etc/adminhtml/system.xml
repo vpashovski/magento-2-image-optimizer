@@ -75,7 +75,7 @@
                     <label>Select Permission</label>
                     <comment><![CDATA[
                     Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a>
-                    <br>Example: 0755. Default: 0777.
+                    <br>Example: 0775. Default: 0664.
                 ]]></comment>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
                     <depends>

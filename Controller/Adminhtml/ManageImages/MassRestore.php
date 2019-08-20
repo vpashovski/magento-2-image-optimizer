@@ -57,15 +57,23 @@ class MassRestore extends Image
         $updated = 0;
         foreach ($collection as $image) {
             try {
-                $this->helperData->processImage($image->getData('path'), false);
-                $image->addData([
-                    'status'        => Status::SKIPPED,
-                    'optimize_size' => null,
-                    'percent'       => null,
-                    'message'       => ''
-                ]);
-                $image->save();
-                $updated++;
+                $result = $this->helperData->restoreImage($image->getData('path'));
+                if ($result) {
+                    $image->addData([
+                        'status'        => Status::SKIPPED,
+                        'optimize_size' => null,
+                        'percent'       => null,
+                        'message'       => ''
+                    ]);
+                    $image->save();
+                    $updated++;
+                } else {
+                    $image->addData([
+                        'status'        => Status::ERROR,
+                        'message'       => __('The file %1 is not writable', $image->getData('path'))
+                    ]);
+                    $image->save();
+                }
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage(
                     __('Something went wrong while restore for %1.', $image->getData('path'))

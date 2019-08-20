@@ -62,15 +62,24 @@ class Restore extends Image
                     return $resultRedirect->setPath('*/*/');
                 }
             }
-            $this->helperData->processImage($model->getData('path'), false);
-            $model->addData([
-                'status'        => Status::SKIPPED,
-                'optimize_size' => null,
-                'percent'       => null,
-                'message'       => ''
-            ]);
-            $this->resourceModel->save($model);
-            $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
+            $result = $this->helperData->restoreImage($model->getData('path'));
+            if ($result) {
+                $model->addData([
+                    'status'        => Status::SKIPPED,
+                    'optimize_size' => null,
+                    'percent'       => null,
+                    'message'       => ''
+                ]);
+                $this->resourceModel->save($model);
+                $this->messageManager->addSuccessMessage(__('The image has been successfully restored'));
+            } else {
+                $model->addData([
+                    'status'        => Status::ERROR,
+                    'message'       => __('The file %1 is not writable', $model->getData('path'))
+                ]);
+                $this->resourceModel->save($model);
+                $this->messageManager->addErrorMessage(__('The file %1 is not writable', $model->getData('path')));
+            }
         } catch (Exception $e) {
             $this->messageManager->addErrorMessage(
                 __('Something went wrong while restore for %1.', $model->getData('path'))

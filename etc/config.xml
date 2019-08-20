@@ -32,7 +32,7 @@
                 <quality_percent>92</quality_percent>
                 <skip_transparent_img>1</skip_transparent_img>
                 <force_permission>0</force_permission>
-                <select_permission>0777</select_permission>
+                <select_permission>0664</select_permission>
             </optimize_options>
             <image_directory>
                 <include_directories>{"_1565771377953_953":{"path":"pub\/media\/"}}</include_directories>
