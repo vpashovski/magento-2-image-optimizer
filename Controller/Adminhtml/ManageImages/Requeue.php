@@ -57,7 +57,11 @@ class Requeue extends Image
                     return $resultRedirect->setPath('*/*/');
                 }
             }
-            $model->setData('status', Status::PENDING);
+            $data = [
+                'status' => Status::PENDING,
+                'message' => ''
+            ];
+            $model->addData($data);
             $this->resourceModel->save($model);
             $this->messageManager->addSuccessMessage(__('The image has been successfully updated.'));
         } catch (Exception $e) {

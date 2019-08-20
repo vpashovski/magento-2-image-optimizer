@@ -68,10 +68,26 @@ class Optimize extends Image
             $result = $this->helperData->optimizeImage($model->getData('path'));
             $this->saveImage($model, $result);
             if ($this->getRequest()->getParam('isAjax')) {
-                return $this->getResponse()->representJson(Data::jsonEncode($model->getData()));
+                if (isset($result['error'])) {
+                    return $this->getResponse()->representJson(Data::jsonEncode([
+                        'status' => __('Error'),
+                        'path'   => $model->getData('path')
+                    ]));
+                }
+
+                return $this->getResponse()->representJson(Data::jsonEncode([
+                    'status' => __('Success'),
+                    'path'   => $model->getData('path')
+                ]));
             }
             $this->getMessageContent($result);
         } catch (Exception $e) {
+            if ($this->getRequest()->getParam('isAjax')) {
+                return $this->getResponse()->representJson(Data::jsonEncode([
+                    'status' => __('Error'),
+                    'path'   => $model->getData('path')
+                ]));
+            }
             $this->messageManager->addErrorMessage($e->getMessage());
             $this->logger->critical($e->getMessage());
         }
@@ -124,7 +140,7 @@ class Optimize extends Image
         if ($status === Status::SUCCESS) {
             if ($this->getRequest()->getParam('isAjax')) {
                 return $this->getResponse()->representJson(Data::jsonEncode([
-                    'status' => 'optimized',
+                    'status' => __('Already optimized, please requeue to optimize again'),
                     'path'   => $model->getData('path')
                 ]));
             }
@@ -135,7 +151,10 @@ class Optimize extends Image
 
         if ($status === Status::SKIPPED) {
             if ($this->getRequest()->getParam('isAjax')) {
-                return $this->getResponse()->representJson(Data::jsonEncode($model->getData()));
+                return $this->getResponse()->representJson(Data::jsonEncode([
+                    'status' => __('Skipped'),
+                    'path'   => $model->getData('path')
+                ]));
             }
             $this->messageManager->addErrorMessage(__('The image(s) are skipped.'));
 
@@ -143,7 +162,10 @@ class Optimize extends Image
         }
 
         if ($this->getRequest()->getParam('isAjax')) {
-            return $this->getResponse()->representJson(Data::jsonEncode(['status' => Status::ERROR]));
+            return $this->getResponse()->representJson(Data::jsonEncode([
+                'status' => __('Error'),
+                'path'   => $model->getData('path')
+            ]));
         }
         $this->messageManager->addErrorMessage(__('The wrong image is specified.'));
 

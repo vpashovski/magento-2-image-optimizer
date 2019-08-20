@@ -25,12 +25,12 @@ define([
     'Magento_Ui/js/modal/modal'
 ], function ($, confirmation, alert) {
     "use strict";
-    var btnOptimize = $('#optimize_image');
+    var btnOptimize = $('#optimize_image'),
+        isStopBtnClicked = false;
 
     $.widget('mageplaza.imageoptimizer', {
         options: {
             index: 0,
-            isStop: false,
             confirmMessage: $.mage.__('Too many images will take a long time to optimize. Are you sure you want to optimize all images?')
         },
 
@@ -87,7 +87,7 @@ define([
                                     text: $.mage.__('Stop'),
                                     class: 'action-stop-optimize',
                                     click: function () {
-                                        self.options.isStop = true;
+                                        isStopBtnClicked = true;
                                         confirmation({
                                             content: $.mage.__('Are you sure you want to stop optimizing images?'),
                                             actions: {
@@ -95,7 +95,7 @@ define([
                                                     location.reload();
                                                 },
                                                 cancel: function () {
-                                                    self.options.isStop = false;
+                                                    isStopBtnClicked = false;
                                                     self.loadAjax();
                                                 }
                                             }
@@ -125,16 +125,16 @@ define([
         },
 
         loadAjax: function () {
+            if (isStopBtnClicked) {
+                return;
+            }
+
             var self              = this,
                 collection        = this.options.collection.items,
                 contentProcessing = $('.mpimageoptimizer-modal-content-processing'),
                 item              = collection[this.options.index],
                 collectionLength  = collection.length,
                 percent           = 100 * (this.options.index + 1) / collectionLength;
-
-            if (this.options.isStop) {
-                return;
-            }
 
             if (this.options.index >= collectionLength) {
                 contentProcessing.text($.mage.__('Image optimization completed'));
@@ -144,10 +144,9 @@ define([
                 return;
             }
             contentProcessing.text(
-                $.mage.__('Processing... ')
-                + ' (' + (this.options.index + 1)
-                + '/' + collectionLength + ')'
-            );
+                $.mage.__('Processing (%1/%2)')
+                .replace('%1', this.options.index + 1)
+                .replace('%2', collectionLength));
             this.options.index++;
 
             return $.ajax({

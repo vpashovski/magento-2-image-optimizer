@@ -58,7 +58,11 @@ class MassRequeue extends Image
         $updated = 0;
         foreach ($collection as $image) {
             try {
-                $image->setStatus(Status::PENDING)->save();
+                $data = [
+                    'status' => Status::PENDING,
+                    'message' => ''
+                ];
+                $image->addData($data)->save();
                 $updated++;
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
