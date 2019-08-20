@@ -126,7 +126,6 @@ class Data extends AbstractData
     {
         $images             = [];
         $includePatterns    = ['jpg', 'png', 'gif', 'tif', 'bmp'];
-        $excludeDirectories = $this->getExcludeDirectories();
         $includeDirectories = $this->getIncludeDirectories();
         if (empty($includeDirectories)) {
             $includeDirectories = [$this->filesystem->getDirectoryRead(DirectoryList::ROOT)->getAbsolutePath()];
@@ -145,7 +144,7 @@ class Data extends AbstractData
             }
             $files = $this->driverFile->readDirectoryRecursively($directory);
             foreach ($files as $file) {
-                if (!$this->checkExcludeDirectory($file, $excludeDirectories)) {
+                if (!$this->checkExcludeDirectory($file)) {
                     continue;
                 }
                 $pathInfo      = $this->getPathInfo(strtolower($file));
@@ -185,17 +184,17 @@ class Data extends AbstractData
 
     /**
      * @param string $file
-     * @param array $excludeDirectories
      *
      * @return bool
      * @throws FileSystemException
      */
-    protected function checkExcludeDirectory($file, $excludeDirectories)
+    protected function checkExcludeDirectory($file)
     {
         if (!$this->driverFile->isFile($file)) {
             return false;
         }
 
+        $excludeDirectories = $this->getExcludeDirectories();
         foreach ($excludeDirectories as $excludeDirectory) {
             if (strpos($file, $excludeDirectory) !== false) {
                 return false;
