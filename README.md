@@ -161,7 +161,7 @@ Command-line is supported for quick and convenient image optimization.
 
 Login to the Admin Magento, choose `Stores > Image Optimizer > Configuration`
 
-![](https://i..com/KkLkVBW.png)
+![](https://i.imgur.com/KkLkVBW.png)
 
 ##### 1.1. General
 
