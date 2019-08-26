@@ -43,7 +43,8 @@ class Optimize extends Image
     {
         /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
-        if (!$this->helperData->isEnabled() && !$this->getRequest()->getParam('isAjax')) {
+        $isAjax = $this->getRequest()->getParam('isAjax');
+        if (!$this->helperData->isEnabled() && !$isAjax) {
             return $this->isDisable($resultRedirect);
         }
 
@@ -54,20 +55,20 @@ class Optimize extends Image
             if ($imageId) {
                 $this->resourceModel->load($model, $imageId);
                 if ($imageId !== $model->getId()) {
-                    return $this->checkStatus($model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect, $isAjax);
                 }
                 $status = $model->getData('status');
                 if ($status === Status::SUCCESS) {
-                    return $this->checkStatus($model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect, $isAjax);
                 }
 
                 if ($status === Status::SKIPPED) {
-                    return $this->checkStatus($model, $resultRedirect);
+                    return $this->checkStatus($model, $resultRedirect, $isAjax);
                 }
             }
             $result = $this->helperData->optimizeImage($model->getData('path'));
             $this->saveImage($model, $result);
-            if ($this->getRequest()->getParam('isAjax')) {
+            if ($isAjax) {
                 if (isset($result['error'])) {
                     return $this->getResponse()->representJson(Data::jsonEncode([
                         'status' => __('Error'),
@@ -82,7 +83,7 @@ class Optimize extends Image
             }
             $this->getMessageContent($result);
         } catch (Exception $e) {
-            if ($this->getRequest()->getParam('isAjax')) {
+            if ($isAjax) {
                 return $this->getResponse()->representJson(Data::jsonEncode([
                     'status' => __('Error'),
                     'path'   => $model->getData('path')
@@ -129,16 +130,17 @@ class Optimize extends Image
     }
 
     /**
-     * @param \Mageplaza\ImageOptimizer\Model\Image $model
-     * @param Redirect $resultRedirect
+     * @param $model
+     * @param $resultRedirect
+     * @param bool $isAjax
      *
      * @return mixed
      */
-    protected function checkStatus($model, $resultRedirect)
+    protected function checkStatus($model, $resultRedirect, $isAjax = false)
     {
         $status = $model->getData('status');
         if ($status === Status::SUCCESS) {
-            if ($this->getRequest()->getParam('isAjax')) {
+            if ($isAjax) {
                 return $this->getResponse()->representJson(Data::jsonEncode([
                     'status' => __('Already optimized, please requeue to optimize again'),
                     'path'   => $model->getData('path')
@@ -150,7 +152,7 @@ class Optimize extends Image
         }
 
         if ($status === Status::SKIPPED) {
-            if ($this->getRequest()->getParam('isAjax')) {
+            if ($isAjax) {
                 return $this->getResponse()->representJson(Data::jsonEncode([
                     'status' => __('Skipped'),
                     'path'   => $model->getData('path')
@@ -161,7 +163,7 @@ class Optimize extends Image
             return $resultRedirect->setPath('*/*/');
         }
 
-        if ($this->getRequest()->getParam('isAjax')) {
+        if ($isAjax) {
             return $this->getResponse()->representJson(Data::jsonEncode([
                 'status' => __('Error'),
                 'path'   => $model->getData('path')

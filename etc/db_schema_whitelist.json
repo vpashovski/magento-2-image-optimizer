@@ -1,0 +1,19 @@
+{
+    "mageplaza_image_optimizer": {
+        "column": {
+            "image_id": true,
+            "path": true,
+            "status": true,
+            "origin_size": true,
+            "optimize_size": true,
+            "percent": true,
+            "message": true
+        },
+        "index": {
+            "Mageplaza_ImageOptimizer_Status": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

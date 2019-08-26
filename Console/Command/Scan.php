@@ -111,7 +111,7 @@ class Scan extends Command
     protected function configure()
     {
         $this->setName('mpimageoptimizer:scan');
-        $this->setDescription('Image Optimizer console command.');
+        $this->setDescription(__('Image Optimizer scan images.'));
 
         parent::configure();
     }
