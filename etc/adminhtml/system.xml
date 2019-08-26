@@ -41,20 +41,18 @@
             </group>
             <group id="optimize_options" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Optimize Options</label>
-                <field id="image_quality" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="image_quality" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Image Quality</label>
                     <source_model>Mageplaza\ImageOptimizer\Model\Config\Source\Quality</source_model>
-                    <comment><![CDATA[
-                Specify optimization level for compression.
+                    <comment><![CDATA[Specify optimization level for compression.
                 <br>Lossless is a filter that compresses the data. This does not reduce the quality but it will require the images to be uncompressed before they can be rendered.
                 <br>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.
                 ]]></comment>
                 </field>
-                <field id="quality_percent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="quality_percent" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Quality Percent</label>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero validate-digits-range digits-range-1-100</validate>
-                    <comment><![CDATA[
-                The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92.
+                    <comment><![CDATA[The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92.
                 <br>For good image quality, please remain above 90. The higher quality percent, the lower compression level.
                 <br>This option supports only JPG images.</p>
                 ]]></comment>
@@ -73,10 +71,7 @@
                 </field>
                 <field id="select_permission" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Select Permission</label>
-                    <comment><![CDATA[
-                    Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a>
-                    <br>Example: 0775. Default: 0664.
-                ]]></comment>
+                    <comment><![CDATA[Enter the number representing certain permission. Refer the list <a href="http://linuxcommand.org/lc3_lts0090.php" target="blank"> here</a><br>Example: 0775. Default: 0664.]]></comment>
                     <validate>validate-no-empty validate-digits validate-greater-than-zero</validate>
                     <depends>
                         <field id="force_permission">1</field>
@@ -103,13 +98,11 @@
                     <label>Enable Image Scan</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="scan_schedule" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="scan_schedule" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Scan Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
-                    <comment><![CDATA[
-                <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
-                ]]></comment>
+                    <comment><![CDATA[<a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>]]></comment>
                     <depends>
                         <field id="enabled_scan">1</field>
                     </depends>
@@ -118,13 +111,11 @@
                     <label>Enable Image Optimization</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="optimize_schedule" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="optimize_schedule" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
                     <label>Optimization Schedule</label>
                     <backend_model>Mageplaza\ImageOptimizer\Model\Config\Backend\Cron\Schedule</backend_model>
                     <validate>validate-no-empty</validate>
-                    <comment><![CDATA[
-                <a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>
-                ]]></comment>
+                    <comment><![CDATA[<a href="https://www.mageplaza.com/faqs/how-configure-cronjob.html" target="blank">How to config cron</a>]]></comment>
                     <depends>
                         <field id="enabled_optimize">1</field>
                     </depends>

@@ -5,9 +5,11 @@ Add,Add
 "<error>Command cannot run because the module is disabled.</error>","<error>Command cannot run because the module is disabled.</error>"
 "<error>The problem occurred during image optimization %1.</error>","<error>The problem occurred during image optimization %1.</error>"
 "<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>","<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>"
+"Image Optimizer optimize images.","Image Optimizer optimize images."
 "<info>Sorry, no images are found after scan.</info>","<info>Sorry, no images are found after scan.</info>"
 "<info>Successful data scanning.</info>","<info>Successful data scanning.</info>"
 "<error>Something went wrong while scan images. Please review the error log.</error>","<error>Something went wrong while scan images. Please review the error log.</error>"
+"Image Optimizer scan images.","Image Optimizer scan images."
 "Image Optimizer","Image Optimizer"
 "Manage Images","Manage Images"
 "The module has been disabled.","The module has been disabled."
@@ -68,24 +70,12 @@ Enable,Enable
 "Backup original image in var/backup_image directory","Backup original image in var/backup_image directory"
 "Optimize Options","Optimize Options"
 "Image Quality","Image Quality"
-"Specify optimization level for compression.
-                <br>Lossless is a filter that compresses the data. This does not reduce the quality but it will require the images to be uncompressed before they can be rendered.
-                <br>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image.","Specify optimization level for compression.
-                <br>Lossless is a filter that compresses the data. This does not reduce the quality but it will require the images to be uncompressed before they can be rendered.
-                <br>Custom (Lossy) is a filter that eliminates some of the data. This will degrade the image, so you’ll have to be careful of how much to reduce the image."
 "Quality Percent","Quality Percent"
-"The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92.
-                <br>For good image quality, please remain above 90. The higher quality percent, the lower compression level.
-                <br>This option supports only JPG images.</p>","The percent (%) of image quality after being optimized. Between 1 and 100. Default value is 92.
-                <br>For good image quality, please remain above 90. The higher quality percent, the lower compression level.
-                <br>This option supports only JPG images.</p>"
 "Skip Transparent Images","Skip Transparent Images"
 "Force File Permission","Force File Permission"
 "If Yes, you can assign access rights to the optimized image paths. For example: read a file, write a file.","If Yes, you can assign access rights to the optimized image paths. For example: read a file, write a file."
 "Select Permission","Select Permission"
-"Enter the number representing certain permission. Refer the list <a href=""http://linuxcommand.org/lc3_lts0090.php"" target=""blank""> here</a>
-                    <br>Example: 0775. Default: 0664.","Enter the number representing certain permission. Refer the list <a href=""http://linuxcommand.org/lc3_lts0090.php"" target=""blank""> here</a>
-                    <br>Example: 0775. Default: 0664."
+"Enter the number representing certain permission. Refer the list <a href=""http://linuxcommand.org/lc3_lts0090.php"" target=""blank""> here</a><br>Example: 0775. Default: 0664.","Enter the number representing certain permission. Refer the list <a href=""http://linuxcommand.org/lc3_lts0090.php"" target=""blank""> here</a><br>Example: 0775. Default: 0664."
 "Scan Directory","Scan Directory"
 "Included Directories","Included Directories"
 "If empty, extension will scan all magento directory, default directory is pub/media/","If empty, extension will scan all magento directory, default directory is pub/media/"
@@ -93,7 +83,6 @@ Enable,Enable
 "Cron Job","Cron Job"
 "Enable Image Scan","Enable Image Scan"
 "Scan Schedule","Scan Schedule"
-"<a href=""https://www.mageplaza.com/faqs/how-configure-cronjob.html"" target=""blank"">How to config cron</a>","<a href=""https://www.mageplaza.com/faqs/how-configure-cronjob.html"" target=""blank"">How to config cron</a>"
 "Enable Image Optimization","Enable Image Optimization"
 "Optimization Schedule","Optimization Schedule"
 "Limit Number of Images","Limit Number of Images"

@@ -156,7 +156,7 @@ class Optimize extends Command
     protected function configure()
     {
         $this->setName('mpimageoptimizer:optimize');
-        $this->setDescription('Image Optimizer console command.');
+        $this->setDescription(__('Image Optimizer optimize images.'));
 
         parent::configure();
     }
