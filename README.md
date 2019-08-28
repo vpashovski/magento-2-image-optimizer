@@ -1,6 +1,6 @@
 # Image Optimizer for Magento 2
 
-[Image Optimizer](http://www.mageplaza.com/magento-2-image-optimizer/) can be considered as a must-have module for Magento 2 stores which have the need to compress and optimize their images. By optimizing the images, you will have the ability to reduce the page loading time, enhance the shopping experience as well as grow the conversion rate considerably. 
+[Image Optimizer](https://www.mageplaza.com/magento-2-image-optimizer/) can be considered as a must-have module for Magento 2 stores which have the need to compress and optimize their images. By optimizing the images, you will have the ability to reduce the page loading time, enhance the shopping experience as well as grow the conversion rate considerably. 
 
 ## 1. Documentation
 
