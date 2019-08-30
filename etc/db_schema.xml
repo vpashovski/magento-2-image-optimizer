@@ -32,7 +32,7 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="image_id"/>
         </constraint>
-        <index referenceId="Mageplaza_ImageOptimizer_Status" indexType="fulltext">
+        <index referenceId="MAGEPLAZA_IMAGE_OPTIMIZER_STATUS" indexType="fulltext">
             <column name="status"/>
         </index>
     </table>

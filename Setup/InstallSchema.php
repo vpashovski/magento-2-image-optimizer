@@ -62,7 +62,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer = $setup;
         $installer->startSetup();
 
-        if (!$installer->tableExists('mageplaza_image_optimizer' && !$this->helperData->versionCompare('2.3.0'))) {
+        if (!$installer->tableExists('mageplaza_image_optimizer') && !$this->helperData->versionCompare('2.3.0')) {
             $table = $installer->getConnection()
                 ->newTable($installer->getTable('mageplaza_image_optimizer'))
                 ->addColumn('image_id', Table::TYPE_INTEGER, null, [

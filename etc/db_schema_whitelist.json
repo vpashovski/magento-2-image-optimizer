@@ -10,7 +10,7 @@
             "message": true
         },
         "index": {
-            "Mageplaza_ImageOptimizer_Status": true
+            "MAGEPLAZA_IMAGE_OPTIMIZER_STATUS": true
         },
         "constraint": {
             "PRIMARY": true
