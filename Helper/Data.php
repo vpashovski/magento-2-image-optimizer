@@ -275,9 +275,16 @@ class Data extends AbstractData
      */
     protected function isTransparentImage($file, $extensionPath)
     {
-        return $extensionPath === 'png'
-            && $this->skipTransparentImage()
-            && imagecolortransparent(imagecreatefrompng($file)) >= 0;
+        $isTransparentImage = false;
+        if ($extensionPath === 'png' && $this->skipTransparentImage()) {
+            try {
+                $isTransparentImage = imagecolortransparent(imagecreatefrompng($file)) >= 0;
+            } catch (Exception $e) {
+                $isTransparentImage = false;
+            }
+        }
+
+        return $isTransparentImage;
     }
 
     /**
@@ -361,7 +368,14 @@ class Data extends AbstractData
      */
     public function fileExists($path)
     {
-        return $this->ioFile->fileExists($path);
+        try {
+            $isExists = $this->driverFile->isExists($path);
+        } catch (FileSystemException $e) {
+            $isExists = false;
+            $this->_logger->critical($e->getMessage());
+        }
+
+        return $isExists;
     }
 
     /**

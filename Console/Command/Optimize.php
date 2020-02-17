@@ -95,7 +95,7 @@ class Optimize extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
-            $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
+            $output->writeln('<error>Command cannot run because the module is disabled.</error>');
 
             return Cli::RETURN_FAILURE;
         }
@@ -126,23 +126,13 @@ class Optimize extends Command
                 $count++;
                 $percent = round(($count / $limit) * 100, 2) . '%';
                 if (isset($result['error'])) {
-                    $output->writeln(
-                        __('<error>The problem occurred during image optimization %1.</error>', $image->getData('path'))
-                    );
+                    $output->writeln('<error>The problem occurred during image optimization '.$image->getData('path').'.</error>');
                     $this->logger->critical($result['error_long']);
                 } else {
-                    $output->writeln(__(
-                        '<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>',
-                        $image->getData('path'),
-                        $count,
-                        $limit,
-                        $percent
-                    ));
+                    $output->writeln('<info>Image '.$image->getData('path').' have been optimized successfully. ('.$count.'/'.$limit.' '.$percent.')</info>');
                 }
             } catch (Exception $e) {
-                $output->writeln(
-                    __('<error>The problem occurred during image optimization %1.</error>', $image->getData('path'))
-                );
+                $output->writeln('<error>The problem occurred during image optimization '.$image->getData('path').'.</error>');
                 $this->logger->critical($e->getMessage());
             }
         }
