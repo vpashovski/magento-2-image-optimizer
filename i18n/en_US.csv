@@ -2,13 +2,7 @@ Path,Path
 Add,Add
 "Optimize Images","Optimize Images"
 "Scan Images","Scan Images"
-"<error>Command cannot run because the module is disabled.</error>","<error>Command cannot run because the module is disabled.</error>"
-"<error>The problem occurred during image optimization %1.</error>","<error>The problem occurred during image optimization %1.</error>"
-"<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>","<info>Image %1 have been optimized successfully. (%2/%3 %4)</info>"
 "Image Optimizer optimize images.","Image Optimizer optimize images."
-"<info>Sorry, no images are found after scan.</info>","<info>Sorry, no images are found after scan.</info>"
-"<info>Successful data scanning.</info>","<info>Successful data scanning.</info>"
-"<error>Something went wrong while scan images. Please review the error log.</error>","<error>Something went wrong while scan images. Please review the error log.</error>"
 "Image Optimizer scan images.","Image Optimizer scan images."
 "Image Optimizer","Image Optimizer"
 "Manage Images","Manage Images"

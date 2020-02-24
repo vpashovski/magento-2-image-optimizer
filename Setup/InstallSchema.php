@@ -54,15 +54,19 @@ class InstallSchema implements InstallSchemaInterface
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      *
+     * @return $this|void
      * @throws Zend_Db_Exception
-     * @throws Exception
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
+        if ($this->helperData->versionCompare('2.3.0')) {
+            return $this;
+        }
+
         $installer = $setup;
         $installer->startSetup();
 
-        if (!$installer->tableExists('mageplaza_image_optimizer') && !$this->helperData->versionCompare('2.3.0')) {
+        if (!$installer->tableExists('mageplaza_image_optimizer')) {
             $table = $installer->getConnection()
                 ->newTable($installer->getTable('mageplaza_image_optimizer'))
                 ->addColumn('image_id', Table::TYPE_INTEGER, null, [

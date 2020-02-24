@@ -81,7 +81,7 @@ class Scan extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$this->helperData->isEnabled()) {
-            $output->writeln(__('<error>Command cannot run because the module is disabled.</error>'));
+            $output->writeln('<error>Command cannot run because the module is disabled.</error>');
 
             return Cli::RETURN_FAILURE;
         }
@@ -89,16 +89,16 @@ class Scan extends Command
         try {
             $data = $this->helperData->scanFiles();
             if (empty($data)) {
-                $output->writeln(__('<info>Sorry, no images are found after scan.</info>'));
+                $output->writeln('<info>Sorry, no images are found after scan.</info>');
 
                 return Cli::RETURN_FAILURE;
             }
             $this->resourceModel->insertImagesData($data);
-            $output->writeln(__('<info>Successful data scanning.</info>'));
+            $output->writeln('<info>Successful data scanning.</info>');
 
             return Cli::RETURN_SUCCESS;
         } catch (Exception  $e) {
-            $output->writeln(__('<error>Something went wrong while scan images. Please review the error log.</error>'));
+            $output->writeln('<error>Something went wrong while scan images. Please review the error log.</error>');
             $this->logger->critical($e->getMessage());
 
             return Cli::RETURN_FAILURE;
