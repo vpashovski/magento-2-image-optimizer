@@ -430,21 +430,15 @@ class Data extends AbstractData
      */
     public function saveImage($url, $path)
     {
+        if (!$this->driverFile->isWritable($path)) {
+            return false;
+        }
         if ($this->getConfigGeneral('backup_image')) {
             $this->backupImage($path);
         }
+        $result = $this->driverFile->copy($url, $path);
         if ($this->getOptimizeOptions('force_permission')) {
-            $this->driverFile->deleteFile($path);
-            $result = $this->ioFile->write(
-                $path,
-                $this->ioFile->read($url),
-                octdec($this->getOptimizeOptions('select_permission'))
-            );
-        } else {
-            $result = $this->ioFile->write(
-                $path,
-                $this->ioFile->read($url)
-            );
+            $this->driverFile->changePermissions($path, octdec($this->getOptimizeOptions('select_permission')));
         }
 
         return $result;
